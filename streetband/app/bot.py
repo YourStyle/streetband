@@ -1,8 +1,6 @@
-import asyncio
 import logging
 import re
 from io import BytesIO
-from typing import List
 
 from aiogram import Bot, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -13,11 +11,11 @@ from loguru import logger
 import app.service as s
 from app.callback_datas import location_callback, choice_callback, user_reg_callback, action_callback, groups_callback
 from app.states import Registration_Musician, Registration_User, Choosing_Musician
-from database import database as db
+from database import database as db, cache
 from app.calculate_distance import choose_shortest
 
 from app.dialogs import msg
-from config import TOKEN
+from config import TOKEN, YEAR
 
 storage = MemoryStorage()
 bot = Bot(token=TOKEN)
@@ -48,6 +46,7 @@ async def start_normal(message: types.Message):
     if not db.user_exists(user_id):
         user = db.add_user(user_id, user_name, language)
         await message.answer(msg.choice, reply_markup=s.CHOICE_KB)
+    await message.answer(msg.wellcome, reply_markup=s.MAIN_KB)
 
 
 @dp.callback_query_handler(user_reg_callback.filter(user="musician"))
@@ -72,7 +71,7 @@ async def user_agreed_policy(call: CallbackQuery, callback_data: dict, state: FS
 
 
 @dp.callback_query_handler(action_callback.filter(action="back"), state='*')
-async def back(call: CallbackQuery, callback_data: dict, state: FSMContext):
+async def back(call: CallbackQuery):
     await call.answer()
     await call.message.answer("Введите данные повторно")
     await Registration_Musician.previous()
@@ -135,7 +134,7 @@ async def get_desc(message: types.Message, state: FSMContext):
 
 
 @dp.callback_query_handler(action_callback.filter(action="approve"), state=Registration_Musician.Waiting_first_approve)
-async def register_musician(call: CallbackQuery, callback_data: dict, state: FSMContext):
+async def register_musician(call: CallbackQuery, state: FSMContext):
     current_info = await state.get_data()
     name = current_info.get('group_name')
     photo = current_info.get('group_pic')
@@ -162,7 +161,8 @@ async def register_musician(call: CallbackQuery, callback_data: dict, state: FSM
 async def send_approved_data(call: CallbackQuery, callback_data: dict):
     await call.answer()
     await bot.send_document(chat_id=callback_data["id"], document=InputFile("app/kxm.docx"),
-                            caption="Спасибо за ожидание! Менеджер подтвердил регистрацию вашей группы. Заполните договор и отпрвьте его в этот чат.")
+                            caption="Спасибо за ожидание! Менеджер подтвердил регистрацию вашей группы. Заполните "
+                                    "договор и отпрвьте его в этот чат.")
     state = dp.current_state(chat=callback_data["id"], user=callback_data["id"])
     await state.set_state(Registration_Musician.Uploading_agreement)
     await call.message.delete()
@@ -173,7 +173,9 @@ async def send_approved_data(call: CallbackQuery, callback_data: dict):
 async def send_declined_data(call: CallbackQuery, callback_data: dict):
     await call.answer()
     await bot.send_message(chat_id=callback_data["id"],
-                           text="Спасибо за ожидание! Менеджер отклонил регистрацию вашей группы.В скором времени он свяжется с вами и расскажет какие правки нужно внести. Данные придётся ввести повторно")
+                           text="Спасибо за ожидание! Менеджер отклонил регистрацию вашей группы.В скором времени он "
+                                "свяжется с вами и расскажет какие правки нужно внести. Данные придётся ввести "
+                                "повторно")
     state = dp.current_state(chat=callback_data["id"], user=callback_data["id"])
     await state.reset_state()
     await call.message.delete()
@@ -181,7 +183,7 @@ async def send_declined_data(call: CallbackQuery, callback_data: dict):
 
 @dp.message_handler(state=Registration_Musician.Uploading_agreement,
                     content_types=types.ContentTypes.DOCUMENT)
-async def get_agreement(message: types.Message, state: FSMContext):
+async def get_agreement(message: types.Message):
     agreement_doc = message.document.file_id
     await message.answer(msg.riba)
 
@@ -196,20 +198,19 @@ async def send_approved_data(call: CallbackQuery, callback_data: dict):
     await call.answer()
     await call.message.delete()
     await bot.send_message(chat_id=callback_data["id"],
-                           text="Спасибо за ожидание! Ваша группа добавлена в нашу базу ! Теперь вы можете управлять всем из своего личного кабинета",
+                           text="Спасибо за ожидание! Ваша группа добавлена в нашу базу ! Теперь вы можете управлять "
+                                "всем из своего личного кабинета",
                            reply_markup=s.MUSICIAN_LC_KB)
 
 
 @dp.callback_query_handler(user_reg_callback.filter(user="user"))
-async def register_musician(call: CallbackQuery, callback_data: dict):
+async def register_musician(call: CallbackQuery):
     await call.answer()
     await call.message.answer(msg.policy, reply_markup=s.AGREEMENT_KB)
     await Registration_User.first()
 
     # @dp.message_handler(Command("show_musicians"))
 
-
-# choosen_musician = ""
 
 @dp.message_handler(filters.Text(contains="Музыканты рядом"))
 async def show_musiacians(message: types.Message):
@@ -246,17 +247,7 @@ async def get_group(call: CallbackQuery, callback_data: dict, state: FSMContext)
                                     address="жанр: джаз",
                                     foursquare_type="food",
                                     reply_markup=s.GROUP_CAPTIONS_KB)
-    # answer_photo(photo=InputFile("app/animals.jpg"),
-    #              caption=f"Вы выбрали группу {callback_data['name']}. Расстояние до неё {callback_data['distance']}км",
-    #              reply_markup=s.GROUP_CAPTIONS_KB)
     await state.reset_state()
-
-
-# @dp.message_handler(content_types=types.ContentTypes.LOCATION, state=Choosing_Musician.Choosing_musician)
-# async def what(message: types.Message, state: FSMContext):
-#     await message.answer_venue(latitude=55.757784, longitude=37.633295, title="Александр Машин", address="жанр: джаз",
-#                                foursquare_type="food",
-#                                reply_markup=s.GROUP_CAPTIONS_KB)
 
 
 @dp.callback_query_handler(groups_callback.filter(location="group_locations"))
@@ -264,6 +255,8 @@ async def show_groups(call: CallbackQuery):
     print(location_kb)
     await call.message.answer(text="Ближайшие группы", reply_markup=location_kb)
     await Choosing_Musician.first()
+
+
 # ! Для обновления групп рядом, раскомментить потом
 # @dp.edited_message_handler(content_types=types.ContentTypes.LOCATION)
 # async def what(message: types.Message):
@@ -292,6 +285,117 @@ async def show_groups(call: CallbackQuery):
 async def open_profile(message: types.Message):
     await message.answer(text="Вы открыли ваш личный кабинет", reply_markup=s.MAIN_KB)
 
+
+@dp.callback_query_handler(lambda call: call.data and call.data == 'info', state="*")
+async def group_info(call: CallbackQuery):
+    await call.answer()
+    print("Чел чекнул инфо")
+
+
+@dp.callback_query_handler(lambda call: call.data and call.data == 'add', state="*")
+async def add_to_favourite(call: CallbackQuery):
+    await call.answer()
+    print("Чел добавил группу в избранное")
+
+
+@dp.message_handler(commands="o", state="*")
+async def show_menu(message: types.Message):
+    await message.answer(text="Вы перешли в личный кабинет", reply_markup=s.MAIN_KB)
+
+
+@dp.callback_query_handler(lambda call: call.data and call.data == 'donate', state="*")
+async def donate(call: CallbackQuery):
+    await call.answer()
+    print("У чела много денег")
+
+
+@dp.message_handler(lambda message: message.text == msg.fav_genres)
+async def get_config(message: types.Message):
+    user_genre_ids = await s.get_genre_ids(message.from_user.id)
+    if user_genre_ids:
+        cache.setex(f"last_msg_{message.from_user.id}", YEAR, message.message_id + 2)
+        genres = await s.get_genres_names(user_genre_ids)
+        await message.answer(msg.config.format(genres=genres),
+                             reply_markup=s.CONFIG_KB)
+    else:
+        cache.setex(f"last_msg_{message.from_user.id}", YEAR, message.message_id + 1)
+        await set_or_update_config(user_id=message.from_user.id)
+
+
+@dp.callback_query_handler(lambda call: call.data == 'delete_config')
+async def delete_config(callback_query: types.CallbackQuery):
+    await db.delete_users(callback_query.from_user.id)
+    cache.delete(f"{callback_query.from_user.id}")
+    await callback_query.answer()
+    cache.incr(f"last_msg_{callback_query.from_user.id}")
+    await bot.send_message(callback_query.from_user.id,
+                           msg.data_delete,
+                           reply_markup=s.MAIN_KB)
+
+
+@dp.callback_query_handler(lambda call: call.data.startswith('edit_config'), state="*")
+async def set_or_update_config(callback_query: types.CallbackQuery = None,
+                               user_id=None, offset=""):
+    # если пришел callback, получим данные
+    if callback_query is not None:
+        user_id = callback_query.from_user.id
+        offset = callback_query.data.split("#")[-1]
+
+    genres_ids = await s.get_genre_ids(user_id)
+    genres = await s.get_genres_names(genres_ids)
+
+    # если это первый вызов функции, отправим сообщение
+    # если нет, отредактируем сообщение и клавиатуру
+    if offset == "":
+        await bot.send_message(
+            user_id,
+            msg.set_genres.format(genres=genres),
+            reply_markup=s.genres_kb(genres_ids)
+        )
+    else:
+        msg_id = cache.get(f"last_msg_{user_id}")
+        await bot.edit_message_text(
+            msg.set_genres.format(genres=genres),
+            user_id,
+            message_id=msg_id
+        )
+        await bot.edit_message_reply_markup(
+            user_id,
+            message_id=msg_id,
+            reply_markup=s.genres_kb(genres_ids, int(offset))
+        )
+
+
+@dp.callback_query_handler(lambda call: call.data[:6] in ['del_ge', 'add_ge'])
+async def update_genres_info(callback_query: types.CallbackQuery):
+    offset = callback_query.data.split("#")[-2]
+    s.update_genres(callback_query.from_user.id, callback_query.data)
+    await set_or_update_config(user_id=callback_query.from_user.id, offset=offset)
+    await callback_query.answer()
+
+
+@dp.callback_query_handler(lambda call: call.data == 'save_config')
+async def save_config(callback_query: types.CallbackQuery):
+    genres_list = await s.get_genre_ids(callback_query.from_user.id)
+    if genres_list:
+        db.insert_or_update_users(
+            callback_query.from_user.id,
+            ",".join(genres_list)
+        )
+        await callback_query.answer()
+        await bot.send_message(
+            callback_query.from_user.id,
+            msg.save,
+            reply_markup=s.MAIN_KB
+        )
+    else:
+        # не сохраняем если список пустой
+        await callback_query.answer(msg.cb_not_saved)
+
+
+@dp.callback_query_handler()
+async def what_shit(call: CallbackQuery):
+    print(call.data)
 
 async def on_shutdown(dp):
     logger.warning('Shutting down..')
