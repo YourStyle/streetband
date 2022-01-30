@@ -8,9 +8,8 @@ import config
 
 
 class Cache(redis.StrictRedis):
-    def __init__(self, host, port, password, charset="utf-8", decode_responses=True):
-        super(Cache, self).__init__(host, port,
-                                    password=password,
+    def __init__(self, host, charset="utf-8", decode_responses=True):
+        super(Cache, self).__init__(host,
                                     charset=charset,
                                     decode_responses=decode_responses)
         logger.info("Redis start")
@@ -90,7 +89,5 @@ class Database:
 
 cache = Cache(
     host=config.REDIS_HOST,
-    port=config.REDIS_PORT,
-    password=config.REDIS_PASSWORD
 )
 database = Database("Street")

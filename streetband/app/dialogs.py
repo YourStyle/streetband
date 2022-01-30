@@ -40,7 +40,7 @@ class Messages():
     lc_mus: str = "🕺 Профиль группы"
     info_mus: str = "🕺 О группе"
     fav_genres: str = "❤️Любимые жанры"
-
+    finish: str = "Let`s rock😎!"
     play_local: str = "🗺Местоположение"
     songs: str = "🎸 Песни"
     balance: str = "💵 Баланс"

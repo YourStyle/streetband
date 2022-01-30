@@ -2,7 +2,6 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, \
     InlineKeyboardMarkup, InlineKeyboardButton
 from typing import Union
 
-from aiogram.utils.emoji import emojize
 
 from app.callback_datas import choice_callback, user_reg_callback, action_callback, groups_callback
 from config import GENRES
@@ -27,7 +26,6 @@ MAIN_KB = ReplyKeyboardMarkup(
         ]
     ]
 )
-
 
 DONATE_KB = InlineKeyboardMarkup(
     inline_keyboard=[
@@ -168,6 +166,8 @@ def create_final_approvement_kb(message: Union[str, int]):
     )
     return DECLINE_OR_APPROVE
 
+
+MEM_KB = InlineKeyboardMarkup().row(InlineKeyboardButton(msg.finish, callback_data="finish"))
 
 # Профиль музыканта
 MUSICIAN_LC_KB = ReplyKeyboardMarkup(

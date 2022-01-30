@@ -1,7 +1,6 @@
 aiogram~=2.14.3
-loguru~=0.5.3
+loguru==0.6.0
 data~=0.4
 pymongo~=4.0.1
-emoji 1.6.3
-redis~=4.1.1
+aioredis==2.0.1
 ujson~=5.1.0

@@ -2,9 +2,6 @@ TOKEN = "1974455256:AAGFash6uGmsdKqDUWs85Fqj1hvI5DwGAv0"
 VERSION = 0.1
 
 REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
-#не забыть пароль добавить 
-REDIS_PASSWORD = None
 
 MINUTE = 60
 YEAR = 60*60*24*366
