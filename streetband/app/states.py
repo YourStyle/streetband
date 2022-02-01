@@ -15,5 +15,6 @@ class Registration_Musician(StatesGroup):
     Uploading_agreement = State()
     Waiting_final_approve = State()
 
+
 class Choosing_Musician(StatesGroup):
     Choosing_musician = State()

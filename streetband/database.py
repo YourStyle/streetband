@@ -50,14 +50,43 @@ class Database:
                       "pending": {}}
             self.users.insert_one(n_user)
 
-    def get_musician(self, musician_id: str) -> Dict:
-        return self.musicians.find_one({"user_id": musician_id})
+    def add_musician(self, user_id: str):
+        if not self.musician_exists(user_id):
+            n_musician = {"musician_id": user_id, 'musician_name': None, "group_requisites": None, "group_pic": None,
+                          'group_genre': [], "group_description": None, "group_leader": None, "current_location": None}
+            self.musicians.insert_one(n_musician)
+            self.users.update_one({"user_id": user_id}, {"$set": {'musician': True}})
 
-    def insert_or_update_users(self, user_id: str, genres: List):
-        pass
+            # {'group_name': 'Кек',
+            # 'group_requisites': '4276 6600 3705 5514',
+            # 'group_pic': 'AgACAgIAAxkDAAIF5mH1MMAf1G9P_mwRyk5avg34Kmq5AAIutzEbibypSx8OsdsjZRVeAQADAgADeQADIwQ',
+            # 'group_genre': жанры
+            # 'group_description': 'Мом',
+            # 'group_leader': '@DeadGleb'
 
-    def get_user(self, musician_id: str) -> Dict:
-        return self.users.find_one({"user_id": musician_id})
+    def set_m_name(self, user_id: str, musician_name: str):
+        self.musicians.update_one({"user_id": user_id}, {"$set": {"musician_mame": musician_name}})
+
+    def set_group_pic(self, user_id: str, group_pic: str):
+        self.musicians.update_one({"user_id": user_id}, {"$set": {"group_pic": group_pic}})
+
+    def set_group_description(self, user_id: str, group_description: str):
+        self.musicians.update_one({"user_id": user_id}, {"$set": {"group_description": group_description}})
+
+    def set_group_leader(self, user_id: str, group_leader: str):
+        self.musicians.update_one({"user_id": user_id}, {"$set": {"group_leader": group_leader}})
+
+    def set_group_genre(self, user_id: str, genres: List[str]):
+        self.musicians.update_one({"user_id": user_id}, {"$set": {"group_genre": genres}})
+
+    def set_group_current_location(self, user_id: str, location: Union[List[str], None]):
+        self.musicians.update_one({"user_id": user_id}, {"$set": {"current_location": location}})
+
+    def get_musician(self, user_id: str) -> Dict:
+        return self.musicians.find_one({"user_id": user_id})
+
+    def get_user(self, user_id: str) -> Dict:
+        return self.users.find_one({"user_id": user_id})
 
     def is_musician(self, user_id: str) -> bool:
         return self.users.find_one({"user_id": user_id})["musician"]
@@ -80,7 +109,7 @@ class Database:
 
     def delete_users(self, user_id: str):
         if self.user_exists(user_id):
-            self.users.delete_one({user_id: user_id})
+            self.users.delete_one({"user_id": user_id})
 
     def delete_musician(self, user_id: str):
         if self.musician_exists(user_id):

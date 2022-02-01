@@ -18,9 +18,10 @@ logger = logging.getLogger(__name__)
 def register_all_handlers(dp):
     register_users(dp)
     start_bot(dp)
+    choose_genres(dp)
     check_streets(dp)
     use_buttons(dp)
-    choose_genres(dp)
+
 
 
 async def set_bot_commands(bot: Bot):

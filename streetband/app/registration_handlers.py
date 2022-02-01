@@ -75,7 +75,7 @@ async def get_desc(message: types.Message, state: FSMContext):
     description = message.text
     current_info = await state.get_data()
     await state.update_data(group_description=description)
-    await state.update_data(group_leader=message.from_user.url)
+    await state.update_data(group_leader=message.from_user.username)
     name = current_info.get('group_name')
     requisites = current_info.get('group_requisites')
     data = "Название группы: {}\nРеквизиты: {}\nОписание: {}".format(name, requisites, description)
@@ -156,7 +156,14 @@ async def register_musician_final(call: CallbackQuery, state: FSMContext):
     # 'group_description': 'Мом',
     # 'group_leader': 'tg://user?id=602172928'}
     if not db.user_exists(call.from_user.id):
-        user = db.add_user(call.from_user.id, call.from_user.username, call.from_user.language_code)
+        db.add_musician(call.from_user.id)
+        db.set_m_name(call.from_user.id, current_info['group_name'])
+        db.set_group_pic(call.from_user.id, current_info['group_pic'])
+        db.set_group_description(call.from_user.id, current_info['group_description'])
+        db.set_group_leader(call.from_user.id, current_info['group_leader'])
+        db.set_group_genre(call.from_user.id, current_info['group_name'])
+        db.set_group_current_location(call.from_user.id, None)
+
     await call.answer()
     await Bot.send_message(chat_id=call.from_user.id,
                            text="Ниже ваш личный кабинет",

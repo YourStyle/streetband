@@ -1,8 +1,9 @@
 from math import radians, cos, sin, asin, sqrt, ceil
 
 from aiogram import types
-from app.show_on_map import show
-from data.locations import Artists
+
+from streetband.app.show_on_map import show
+from streetband.data.locations import artists
 
 R = 6378.1
 
@@ -21,10 +22,11 @@ def calc_distance(lat1, lon1, lat2, lon2):
 
 def choose_shortest(location: types.Location):
     distances = list()
-    for artist_name, artist_location,artist_img, artist_id in Artists:
+    for artist_name, artist_location, artist_gen, artist_id in artists:
         distances.append((artist_name,
                           calc_distance(location.latitude, location.longitude,
-                                        artist_location["lat"], artist_location["lon"]), show(**artist_location),
-                          artist_location, artist_id["artist_id"]
+                                        artist_location["lat"], artist_location["lon"]),
+                          artist_location["lat"], artist_location["lon"], artist_gen["genre"], artist_id["artist_id"]
                           ))
+    # show(**artist_location)
     return sorted(distances, key=lambda x: x[1])[:4]

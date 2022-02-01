@@ -3,12 +3,13 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, \
 from typing import Union
 
 
-from app.callback_datas import choice_callback, user_reg_callback, action_callback, groups_callback
-from config import GENRES
-from database import database as db, cache
-from app.dialogs import msg
 
 # Профиль юзера
+from streetband.app.callback_datas import groups_callback, user_reg_callback, choice_callback, action_callback
+from streetband.app.dialogs import msg
+from streetband.config import GENRES
+from streetband.database import cache, database
+
 MAIN_KB = ReplyKeyboardMarkup(
     resize_keyboard=True,
     row_width=2,
@@ -193,12 +194,11 @@ MUSICIAN_LC_KB = ReplyKeyboardMarkup(
 
 
 async def get_genre_ids(user_id: str) -> list:
-    """Функция получает id лиг пользователя в базе данных"""
+    """Функция получает id жанров пользователя в базе данных"""
     genres = cache.lrange(f"{user_id}", 0, -1)
     if genres is None:
-        genres = await db.select_users(user_id)
+        genres = database.get_user(user_id)["fav_genres"]
         if genres is not None:
-            genres = genres.split(',')
             [cache.lpush(f"{user_id}", ge_id) for ge_id in genres]
         else:
             return []
