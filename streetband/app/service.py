@@ -2,10 +2,9 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, \
     InlineKeyboardMarkup, InlineKeyboardButton
 from typing import Union
 
-
-
 # Профиль юзера
-from streetband.app.callback_datas import groups_callback, user_reg_callback, choice_callback, action_callback
+from streetband.app.callback_datas import groups_callback, user_reg_callback, choice_callback, action_callback, \
+    info_callback, add_callback
 from streetband.app.dialogs import msg
 from streetband.config import GENRES
 from streetband.database import cache, database
@@ -34,34 +33,6 @@ DONATE_KB = InlineKeyboardMarkup(
             InlineKeyboardButton(
                 text=msg.donate,
                 callback_data="donate"
-            )
-        ]
-    ]
-)
-
-GROUP_CAPTIONS_KB = InlineKeyboardMarkup(
-    row_width=2,
-    inline_keyboard=[
-        [
-            InlineKeyboardButton(
-                text=msg.add_musician,
-                callback_data="add"
-            ),
-            InlineKeyboardButton(
-                text=msg.info_mus,
-                callback_data="info"
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text=msg.donate,
-                callback_data="donate"
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text="Назад",
-                callback_data=groups_callback.new(location="group_locations")
             )
         ]
     ]
@@ -126,6 +97,37 @@ BACK_OR_APPROVE_KB = InlineKeyboardMarkup(
         ]
     ]
 )
+
+
+def create_group_caption_kb(artist_id, loc):
+    GROUP_CAPTIONS_KB = InlineKeyboardMarkup(
+        row_width=2,
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text=msg.add_musician,
+                    callback_data=add_callback.new(id=artist_id, db_loc=loc)
+                ),
+                InlineKeyboardButton(
+                    text=msg.info_mus,
+                    callback_data=info_callback.new(id=artist_id, db_loc=loc)
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text=msg.donate,
+                    callback_data="donate"
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text="Назад",
+                    callback_data=groups_callback.new(location="group_locations")
+                )
+            ]
+        ]
+    )
+    return GROUP_CAPTIONS_KB
 
 
 def create_approvement_kb(message: Union[str, int]):
@@ -234,21 +236,25 @@ def genres_kb(active_genres: list, offset: int = 0):
     return kb
 
 
-async def get_genres_names(ids: list) -> str:
-    """Функция собирает сообщение с названиями лиг из id"""
+async def get_genres_names(ids: list, sep: bool = True) -> str:
     genres_text = ""
-    for i, genre_id in enumerate(ids, start=1):
-        if i != 1:
-            genres_text += '\n'
-        genres_text += msg.genre_row.format(
-            i=i,
-            name=GENRES.get(genre_id, '-')
-        )
+    if sep:
+        for i, genre_id in enumerate(ids, start=1):
+            if i != 1:
+                genres_text += '\n'
+            genres_text += msg.genre_row.format(
+                i=i,
+                name=GENRES.get(genre_id, '-')
+            )
+    else:
+        for i, genre_id in enumerate(ids, start=1):
+            if i != 1:
+                genres_text += ','
+            genres_text += msg.genre_rows.format(i=GENRES.get(genre_id, '-'))
     return genres_text
 
 
 def update_genres(user_id: str, data: str):
-    """Функция добавляет или удаляет id лиги для юзера"""
     genre_id = data.split("#")[-1]  # data ~ add_league_#5#345
     if data.startswith("add"):
         cache.lpush(f"{user_id}", genre_id)

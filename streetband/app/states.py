@@ -1,20 +1,21 @@
 from aiogram.dispatcher.filters.state import StatesGroup, State
 
 
-class Registration_User(StatesGroup):
+class RegistrationUser(StatesGroup):
     Agreeing_terms = State()
 
 
-class Registration_Musician(StatesGroup):
+class RegistrationMusician(StatesGroup):
     Agreeing_terms = State()
     Group_name = State()
     Requisites = State()
     Group_pic = State()
+    Group_genres = State()
     Group_desc = State()
     Waiting_first_approve = State()
     Uploading_agreement = State()
     Waiting_final_approve = State()
 
 
-class Choosing_Musician(StatesGroup):
+class ChoosingMusician(StatesGroup):
     Choosing_musician = State()

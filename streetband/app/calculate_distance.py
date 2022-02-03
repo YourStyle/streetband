@@ -3,7 +3,7 @@ from math import radians, cos, sin, asin, sqrt, ceil
 from aiogram import types
 
 from streetband.app.show_on_map import show
-from streetband.data.locations import artists
+from streetband.database import database as db, cache
 
 R = 6378.1
 
@@ -21,12 +21,30 @@ def calc_distance(lat1, lon1, lat2, lon2):
 
 
 def choose_shortest(location: types.Location):
-    distances = list()
-    for artist_name, artist_location, artist_gen, artist_id in artists:
-        distances.append((artist_name,
-                          calc_distance(location.latitude, location.longitude,
-                                        artist_location["lat"], artist_location["lon"]),
-                          artist_location["lat"], artist_location["lon"], artist_gen["genre"], artist_id["artist_id"]
-                          ))
+    distances = []
+    musicians = cache.jget("musicians")
+
+    if musicians is None:
+        db.get_musicians()
+        musicians = cache.jget("musicians")
+
+    for musician in musicians:
+        artist_id = musician["musician_id"]
+        artist_name = musician["musician_name"]
+        artist_location = musician["current_location"]
+        if artist_location is not None:
+            distances.append((artist_name,
+                              calc_distance(location.latitude, location.longitude,
+                                            artist_location["lat"], artist_location["lon"]),
+                              artist_id
+                              ))
+        else:
+            # если будет мало артистов, иначе будет пустое сообщение
+            arctic = {"lat": -79.474655, "lon": 29.507431}
+            distances.append((artist_name,
+                              calc_distance(location.latitude, location.longitude,
+                                            arctic["lat"], arctic["lon"]),
+                              artist_id
+                              ))
     # show(**artist_location)
-    return sorted(distances, key=lambda x: x[1])[:4]
+    return sorted(distances, key=lambda x: x[1])[:5]

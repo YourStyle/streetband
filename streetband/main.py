@@ -19,8 +19,9 @@ def register_all_handlers(dp):
     register_users(dp)
     start_bot(dp)
     choose_genres(dp)
-    check_streets(dp)
     use_buttons(dp)
+    check_streets(dp)
+
 
 
 
