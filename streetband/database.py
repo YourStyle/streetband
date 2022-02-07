@@ -106,21 +106,26 @@ class Database:
         return self.users.find_one({"user_id": user_id})["musician"]
 
     def to_fav(self, user_id: str, musician_id: str):
-        update = self.users.update_one({"user_id": user_id}, {"$push": {"fav_groups": musician_id}})
+
         c_user = self.get_user(user_id)
-        c_user_pending = c_user["pending"]
-        c_mus = self.get_musician(musician_id)
-        m_genres = c_mus["group_genre"]
-        for i in m_genres:
-            if i not in c_user["fav_genres"]:
-                try:
-                    c_user_pending[i] += 1
-                except KeyError:
-                    c_user_pending[i] = 1
-                if c_user_pending[i] == config.PENDING_APPROVAL:
-                    self.users.update_one({"user_id": user_id}, {"$push": {"fav_genres": i}})
-                    c_user_pending.pop(i, None)
-        self.users.update_one({"user_id": user_id}, {"$set": {"pending": c_user_pending}})
+        if musician_id not in c_user["fav_groups"]:
+            update = self.users.update_one({"user_id": user_id}, {"$push": {"fav_groups": musician_id}})
+            c_user_pending = c_user["pending"]
+            c_mus = self.get_musician(musician_id)
+            m_genres = c_mus["group_genre"]
+            for i in m_genres:
+                if i not in c_user["fav_genres"]:
+                    try:
+                        c_user_pending[i] += 1
+                    except KeyError:
+                        c_user_pending[i] = 1
+                    if c_user_pending[i] == config.PENDING_APPROVAL:
+                        self.users.update_one({"user_id": user_id}, {"$push": {"fav_genres": i}})
+                        c_user_pending.pop(i, None)
+            self.users.update_one({"user_id": user_id}, {"$set": {"pending": c_user_pending}})
+
+    def from_fav(self, user_id: str, musician_id: str):
+        self.users.update_one({"user_id": user_id}, {"$pull": {"fav_groups": musician_id}})
 
     def delete_users(self, user_id: str):
         if self.user_exists(user_id):
