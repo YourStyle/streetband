@@ -24,7 +24,7 @@ async def musician_agreed_policy(call: CallbackQuery):
 
 
 async def user_agreed_policy(call: CallbackQuery, state: FSMContext):
-    if not db.user_exists(call.from_user.id):
+    if not db.user_exists(str(call.from_user.id)):
         db.add_user(str(call.from_user.id), call.from_user.username, call.from_user.language_code)
     await call.answer()
     await call.message.answer(msg.reg_complete, reply_markup=s.MAIN_KB)
@@ -81,7 +81,11 @@ async def get_desc(message: types.Message, state: FSMContext):
     description = message.text
     current_info = await state.get_data()
     await state.update_data(group_description=description)
-    await state.update_data(group_leader=message.from_user.username)
+    if message.from_user.username is None:
+        leader = message.from_user.first_name
+    else:
+        leader = message.from_user.username
+    await state.update_data(group_leader=leader)
     name = current_info.get('group_name')
     requisites = current_info.get('group_requisites')
     genres = current_info.get('group_genres')
@@ -152,7 +156,7 @@ async def send_approved_data_fin(call: CallbackQuery, callback_data: dict):
     await call.message.delete()
     await call.bot.send_message(chat_id=callback_data["id"],
                                 text="Спасибо за ожидание! Ваша группа добавлена в нашу базу ! Теперь вы можете управлять "
-                                     "всем из своего личного кабинета",
+                                     "всем из своего личного кабинета. Нажмите на кнопку ниже, чтобы открыть личный кабинет",
                                 reply_markup=s.MEM_KB)
 
 
@@ -166,11 +170,14 @@ async def register_musician_final(call: CallbackQuery, state: FSMContext):
     db.set_group_leader(muser_id, str(current_info['group_leader']))
     db.set_group_genre(muser_id, current_info['group_genres'].capitalize().split(','))
     db.set_group_current_location(muser_id, None)
-
+    db.free_subscription(muser_id)
+    db.get_musicians()
     await call.answer()
     await call.bot.send_message(chat_id=call.from_user.id,
                                 text="Ниже ваш личный кабинет",
                                 reply_markup=s.MUSICIAN_LC_KB)
+    await state.reset_state(with_data=True)
+    print(await state.get_state())
 
 
 async def register_user(call: CallbackQuery):
@@ -187,12 +194,14 @@ def register_users(dp: Dispatcher):
                                        state=RegistrationUser.Agreeing_terms)
     dp.register_callback_query_handler(exit_reg, action_callback.filter(action="exit"), state='*')
     dp.register_callback_query_handler(back, action_callback.filter(action="back"), state='*')
+
     dp.register_message_handler(get_name, state=RegistrationMusician.Group_name)
     dp.register_message_handler(get_requisites, state=RegistrationMusician.Requisites)
     dp.register_message_handler(get_pic, state=RegistrationMusician.Group_pic,
                                 content_types=types.ContentTypes.PHOTO | types.ContentTypes.DOCUMENT)
     dp.register_message_handler(get_genres, state=RegistrationMusician.Group_genres)
     dp.register_message_handler(get_desc, state=RegistrationMusician.Group_desc)
+
     dp.register_callback_query_handler(register_musician_info, action_callback.filter(action="approve"),
                                        state=RegistrationMusician.Waiting_first_approve)
     dp.register_callback_query_handler(send_approved_data, action_callback.filter(action="approve_data"),

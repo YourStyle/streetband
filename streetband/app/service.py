@@ -1,10 +1,13 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, \
     InlineKeyboardMarkup, InlineKeyboardButton
 from typing import Union
-
-# Профиль юзера
+from PIL import Image, ImageDraw
+import qrcode
+from qrcode.image.styledpil import StyledPilImage
+from qrcode.image.styles.moduledrawers import RoundedModuleDrawer
+from qrcode.image.styles.colormasks import VerticalGradiantColorMask
 from streetband.app.callback_datas import groups_callback, user_reg_callback, choice_callback, action_callback, \
-    info_callback, add_callback
+    info_callback, add_callback, delete_callback, review_callback
 from streetband.app.dialogs import msg
 from streetband.config import GENRES
 from streetband.database import cache, database
@@ -19,10 +22,6 @@ MAIN_KB = ReplyKeyboardMarkup(
         ],
         [
             KeyboardButton(msg.nearby)
-        ],
-        [
-            KeyboardButton(msg.name_lc),
-            KeyboardButton(msg.balance)
         ]
     ]
 )
@@ -99,18 +98,14 @@ BACK_OR_APPROVE_KB = InlineKeyboardMarkup(
 )
 
 
-def create_group_caption_kb(artist_id, loc):
+def create_group_caption_kb(artist_id, number):
     GROUP_CAPTIONS_KB = InlineKeyboardMarkup(
         row_width=2,
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text=msg.add_musician,
-                    callback_data=add_callback.new(id=artist_id, db_loc=loc)
-                ),
-                InlineKeyboardButton(
                     text=msg.info_mus,
-                    callback_data=info_callback.new(id=artist_id, db_loc=loc)
+                    callback_data=info_callback.new(id=artist_id, db_number=number)
                 )
             ],
             [
@@ -122,11 +117,118 @@ def create_group_caption_kb(artist_id, loc):
             [
                 InlineKeyboardButton(
                     text="Назад",
-                    callback_data=groups_callback.new(location="group_locations")
+                    callback_data=groups_callback.new(location="back")
                 )
             ]
         ]
     )
+    return GROUP_CAPTIONS_KB
+
+
+EDIT_PROFILE_KB = InlineKeyboardMarkup(inline_keyboard=[
+    [
+        InlineKeyboardButton(
+            text="📝Название",
+            callback_data="edit_name"
+        ),
+        InlineKeyboardButton(
+            text="📝Описание",
+            callback_data="edit_description"
+        )
+    ],
+    [
+        InlineKeyboardButton(
+            text="📝Фото",
+            callback_data="edit_picture"
+        ),
+        InlineKeyboardButton(
+            text="📝Лидер",
+            callback_data="edit_leader"
+        )
+    ],
+    [
+        InlineKeyboardButton(
+            text="📝Жанры",
+            callback_data="edit_genres"
+        )
+    ]
+]
+)
+
+
+def create_group_action_kb(artist_id, number, fav=False, location=True):
+    if not fav:
+        GROUP_CAPTIONS_KB = InlineKeyboardMarkup(
+            row_width=2,
+            inline_keyboard=[
+                [
+                    InlineKeyboardButton(
+                        text=msg.add_musician,
+                        callback_data=add_callback.new(id=artist_id, db_number=number)
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        text=msg.donate,
+                        callback_data="donate"
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        text="Назад",
+                        callback_data=groups_callback.new(location="back")
+                    )
+                ]
+            ]
+        )
+    elif location:
+        GROUP_CAPTIONS_KB = InlineKeyboardMarkup(
+            row_width=2,
+            inline_keyboard=[
+                [
+                    InlineKeyboardButton(
+                        text=msg.delete_musician,
+                        callback_data=delete_callback.new(id=artist_id)
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        text=msg.donate,
+                        callback_data="donate"
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        text="Назад",
+                        callback_data=groups_callback.new(location="back")
+                    )
+                ]
+            ]
+        )
+    else:
+        GROUP_CAPTIONS_KB = InlineKeyboardMarkup(
+            row_width=2,
+            inline_keyboard=[
+                [
+                    InlineKeyboardButton(
+                        text=msg.delete_musician,
+                        callback_data=delete_callback.new(id=artist_id)
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        text=msg.donate,
+                        callback_data="donate"
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        text="Назад",
+                        callback_data="back_to_fav"
+                    )
+                ]
+            ]
+        )
     return GROUP_CAPTIONS_KB
 
 
@@ -172,21 +274,23 @@ def create_final_approvement_kb(message: Union[str, int]):
 
 MEM_KB = InlineKeyboardMarkup().row(InlineKeyboardButton(msg.finish, callback_data="finish"))
 
+CAN_KB = InlineKeyboardMarkup().row(InlineKeyboardButton(msg.subscription_con, callback_data="cancel_subscription"))
+SUB_KB = InlineKeyboardMarkup().row(InlineKeyboardButton(msg.subscription_ref, callback_data="activate_subscription"))
+
+FREE_KB = InlineKeyboardMarkup().row(InlineKeyboardButton("😎 Активировать", callback_data="free"))
+
 # Профиль музыканта
 MUSICIAN_LC_KB = ReplyKeyboardMarkup(
     resize_keyboard=True,
     row_width=2,
     keyboard=[
         [
-            KeyboardButton(msg.play_local),
+            KeyboardButton(text=msg.play_local, request_location=True),
             KeyboardButton(msg.songs)
         ],
         [
-            KeyboardButton(msg.balance),
-            KeyboardButton(msg.bonuses)
-        ],
-        [
-            KeyboardButton(msg.lc)
+            KeyboardButton(msg.qr),
+            KeyboardButton(msg.subscription)
         ],
         [
             KeyboardButton(msg.lc_mus)
@@ -198,8 +302,12 @@ MUSICIAN_LC_KB = ReplyKeyboardMarkup(
 async def get_genre_ids(user_id: str) -> list:
     """Функция получает id жанров пользователя в базе данных"""
     genres = cache.lrange(f"{user_id}", 0, -1)
-    if genres is None:
-        genres = database.get_user(user_id)["fav_genres"]
+    if not genres:
+        if cache.jget(f"{user_id}_gen") != "editing":
+            try:
+                genres = database.get_user(user_id)["fav_genres"]
+            except TypeError:
+                return []
         if genres is not None:
             [cache.lpush(f"{user_id}", ge_id) for ge_id in genres]
         else:
@@ -260,3 +368,35 @@ def update_genres(user_id: str, data: str):
         cache.lpush(f"{user_id}", genre_id)
     else:
         cache.lrem(f"{user_id}", 0, genre_id)
+
+
+def create_qr(musician_id):
+    data = "https://t.me/streetband_bot?start=mus_" + musician_id
+    Logo_link = 'logo.png'
+
+    logo = Image.open(Logo_link)
+    basewidth = 100
+    draw = ImageDraw.Draw(logo)
+
+    # adjust image size
+    wpercent = (basewidth / float(logo.size[0]))
+    hsize = int((float(logo.size[1]) * float(wpercent)))
+    logo = logo.resize((basewidth, hsize), Image.ANTIALIAS)
+    # mus_qr = musician_id + ".png"
+    qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_H)
+    qr.add_data(data)
+
+    img = qr.make_image(image_factory=StyledPilImage, module_drawer=RoundedModuleDrawer(radius_ratio=0.5),
+                        color_mask=VerticalGradiantColorMask(bottom_color=(192, 0, 32)))
+    pos = ((img.size[0] - logo.size[0]) // 2,
+           (img.size[1] - logo.size[1]) // 2)
+    img.paste(logo, pos, logo)
+    return img
+
+
+def review_kb():
+    kb = InlineKeyboardMarkup(row_width=5)
+    buf = []
+    for i in range(1, 6):
+        kb.insert(InlineKeyboardButton(f"⭐️{i}", callback_data=review_callback.new(score=str(i))))
+    return kb

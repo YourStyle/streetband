@@ -7,7 +7,9 @@ import logging
 
 from streetband import config
 from streetband.app.button_handlers import use_buttons
+from streetband.app.feedback_handlers import send_feedback
 from streetband.app.genres_handlers import choose_genres
+from streetband.app.musician import MusicianFilter
 from streetband.app.registration_handlers import register_users
 from streetband.app.start_handlers import start_bot
 from streetband.app.streets_handlers import check_streets
@@ -15,23 +17,24 @@ from streetband.app.streets_handlers import check_streets
 logger = logging.getLogger(__name__)
 
 
+def register_all_filters(dp):
+    dp.filters_factory.bind(MusicianFilter)
+
+
 def register_all_handlers(dp):
-    register_users(dp)
     start_bot(dp)
+    register_users(dp)
     choose_genres(dp)
     use_buttons(dp)
     check_streets(dp)
-
-
-
+    send_feedback(dp)
 
 async def set_bot_commands(bot: Bot):
     data = [
         (
             [
                 BotCommand(command="start", description="Запуск бота"),
-                BotCommand(command="help", description="Помощь"),
-                BotCommand(command="open_lc", description="Открыть личный кабинет")
+                BotCommand(command="feedback", description="Отправить отзыв о боте")
             ],
             BotCommandScopeDefault(),
             None
@@ -52,12 +55,14 @@ async def main():
 
     await set_bot_commands(bot)
 
+    register_all_filters(dp)
     register_all_handlers(dp)
 
     try:
         await dp.start_polling()
     finally:
         await dp.storage.close()
+        print(dp.storage)
         await dp.storage.wait_closed()
         await bot.session.close()
 

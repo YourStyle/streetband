@@ -17,16 +17,15 @@ def calc_distance(lat1, lon1, lat2, lon2):
     c = 2 * asin(sqrt(a))
     # Radius of earth in kilometers is 6371
     km = 6371 * c
+    if km < 1:
+        return str(km * 1000)[:5]
     return ceil(km)
 
 
 def choose_shortest(location: types.Location):
     distances = []
+    db.get_musicians()
     musicians = cache.jget("musicians")
-
-    if musicians is None:
-        db.get_musicians()
-        musicians = cache.jget("musicians")
 
     for musician in musicians:
         artist_id = musician["musician_id"]
@@ -35,16 +34,21 @@ def choose_shortest(location: types.Location):
         if artist_location is not None:
             distances.append((artist_name,
                               calc_distance(location.latitude, location.longitude,
-                                            artist_location["lat"], artist_location["lon"]),
+                                            artist_location["latitude"], artist_location["longitude"]),
                               artist_id
                               ))
         else:
             # если будет мало артистов, иначе будет пустое сообщение
-            arctic = {"lat": -79.474655, "lon": 29.507431}
+            arctic = {"latitude": -79.474655, "longitude": 29.507431}
             distances.append((artist_name,
                               calc_distance(location.latitude, location.longitude,
-                                            arctic["lat"], arctic["lon"]),
+                                            arctic["latitude"], arctic["longitude"]),
                               artist_id
                               ))
-    # show(**artist_location)
-    return sorted(distances, key=lambda x: x[1])[:5]
+    meters = [i for i in distances if type(i[1]) == str]
+    meters = sorted(meters, key=lambda x: float(x[1]))
+    km = [i for i in distances if type(i[1]) == int]
+    km = sorted(km, key=lambda x: x[1])
+    distances = meters + km
+
+    return distances, len(meters)

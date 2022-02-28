@@ -19,3 +19,15 @@ class RegistrationMusician(StatesGroup):
 
 class ChoosingMusician(StatesGroup):
     Choosing_musician = State()
+
+
+class EditingProfile(StatesGroup):
+    EditingName = State()
+    EditingPic = State()
+    EditingDesc = State()
+    EditingLeader = State()
+    EditingGenres = State()
+
+
+class Feedback(StatesGroup):
+    Reviewing = State()

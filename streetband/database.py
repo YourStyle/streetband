@@ -1,10 +1,12 @@
+import datetime
+
 import pymongo
 from loguru import logger
 from typing import Dict, List, Union
 import redis
 import ujson
 
-import config
+from streetband import config
 
 
 class Cache(redis.StrictRedis):
@@ -53,7 +55,8 @@ class Database:
     def add_musician(self, user_id: str):
         if not self.musician_exists(user_id):
             n_musician = {"musician_id": user_id, 'musician_name': None, "group_pic": None,
-                          'group_genre': [], "group_description": None, "group_leader": None, "current_location": None}
+                          'group_genre': [], "group_description": None, "group_leader": None, "current_location": None,
+                          'subscription': None, 'free_subscription': None, 'active_subscription': None, 'songs': []}
             self.musicians.insert_one(n_musician)
 
             if not self.user_exists(user_id):
@@ -92,11 +95,11 @@ class Database:
         self.musicians.update_one({"musician_id": user_id}, {"$set": {"current_location": location}})
 
     def get_musician(self, user_id: str) -> Dict:
-        return self.musicians.find_one({"musician_id": user_id})
+        return self.musicians.find_one({"musician_id": user_id}, projection={"_id": False})
 
     def get_musicians(self):
-        if cache.jget("musician") is None:
-            buffer = list(self.musicians.find(projection={"_id": False}))
+        buffer = list(self.musicians.find(projection={"_id": False}))
+        if cache.jget("musicians") != buffer:
             cache.jset("musicians", buffer)
 
     def get_user(self, user_id: str) -> Dict:
@@ -106,7 +109,6 @@ class Database:
         return self.users.find_one({"user_id": user_id})["musician"]
 
     def to_fav(self, user_id: str, musician_id: str):
-
         c_user = self.get_user(user_id)
         if musician_id not in c_user["fav_groups"]:
             update = self.users.update_one({"user_id": user_id}, {"$push": {"fav_groups": musician_id}})
