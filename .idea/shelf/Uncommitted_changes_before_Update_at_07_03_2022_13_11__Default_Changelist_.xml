@@ -1,0 +1,24 @@
+<changelist name="Uncommitted_changes_before_Update_at_07_03_2022_13_11_[Default_Changelist]" date="1646647864191" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_07_03_2022_13_11_[Default_Changelist]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 07.03.2022 13:11 [Default Changelist]" />
+  <binary>
+    <option name="BEFORE_PATH" value="streetband/acdc.jpg" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="redis/64bit/dump.rdb" />
+    <option name="AFTER_PATH" value="redis/64bit/dump.rdb" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_07_03_2022_13_11_[Default_Changelist]/dump.rdb" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="streetband/app/animals.jpg" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="streetband/app/kxm.docx" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+</changelist>
