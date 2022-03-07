@@ -1,0 +1,9 @@
+aiogram==2.19
+loguru==0.6.0
+data~=0.4
+pymongo~=4.0.1
+aioredis==2.0.1
+redis==4.1.4
+ujson~=5.1.0
+qrcode==7.3.1
+Pillow==9.0.1
