@@ -33,8 +33,7 @@ class Database:
 
     def __init__(self, name):
         self.name = name
-        # self._conn = self.connection()
-        self.client = pymongo.MongoClient()
+        self.client = pymongo.MongoClient(username='Admin', password='PasswordForMongo63')
         self.db = self.client.Street
         logger.info("Database connection established")
         self.musicians = self.db.musicians
