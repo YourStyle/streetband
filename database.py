@@ -33,7 +33,10 @@ class Database:
 
     def __init__(self, name):
         self.name = name
-        self.client = pymongo.MongoClient(username='Admin', password='PasswordForMongo63')
+        self.client = pymongo.MongoClient()
+        # self.client = pymongo.MongoClient("localhost", username='Admin', password='PasswordForMongo63',
+        #                                   authSource='admin', authMechanism='SCRAM-SHA-256')
+        self.client = pymongo.MongoClient()
         self.db = self.client.Street
         logger.info("Database connection established")
         self.musicians = self.db.musicians
@@ -97,7 +100,7 @@ class Database:
         return self.musicians.find_one({"musician_id": user_id}, projection={"_id": False})
 
     def get_musicians(self):
-        buffer = list(self.musicians.find(projection={"_id": False}))
+        buffer = list(self.musicians.find(projection={"_id": False, "subscription": False}))
         if cache.jget("musicians") != buffer:
             cache.jset("musicians", buffer)
 
@@ -130,9 +133,16 @@ class Database:
 
     def add_genre(self, user_id: str, genres: List[str]):
         c_genres = self.users.find_one({"user_id": user_id})["fav_genres"]
+        # print(genres)
         for i in genres:
             if i not in c_genres:
                 self.users.update_one({"user_id": user_id}, {"$push": {"fav_genres": i}})
+
+    def add_m_genre(self, user_id: str, genres: List[str]):
+        c_genres = self.musicians.find_one({"musician_id": user_id})["group_genre"]
+        for i in genres:
+            if i not in c_genres:
+                self.musicians.update_one({"musician_id": user_id}, {"$push": {"group_genre": i}})
 
     def free_subscription(self, user_id: str):
         pass
@@ -160,6 +170,11 @@ class Database:
         c_genres = self.users.find_one({"user_id": user_id})["fav_genres"]
         for i in c_genres:
             self.users.update_one({"user_id": user_id}, {"$pull": {"fav_genres": i}})
+
+    def delete_m_genres(self, user_id: str):
+        c_genres = self.musicians.find_one({"musician_id": user_id})["group_genre"]
+        for i in c_genres:
+            self.musicians.update_one({"musician_id": user_id}, {"$pull": {"group_genre": i}})
 
     def delete_users(self, user_id: str):
         if self.user_exists(user_id):

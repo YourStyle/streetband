@@ -205,13 +205,13 @@ async def set_edit_leader(call: CallbackQuery, state: FSMContext):
     await state.set_state(EditingProfile.EditingLeader)
 
 
-async def set_edit_genres(call: CallbackQuery, state: FSMContext):
-    await call.answer()
-    genres_id = cache.jget(f"musician_{str(call.from_user.id)}")["group_genre"]
-    genres = await s.get_genres_names(genres_id)
-    current_genres = "Текущий жанры:\n" + genres + "\n"
-    await call.message.answer(current_genres + msg.genres)
-    await state.set_state(EditingProfile.EditingGenres)
+# async def set_edit_genres(call: CallbackQuery, state: FSMContext):
+#     await call.answer()
+#     genres_id = cache.jget(f"musician_{str(call.from_user.id)}")["group_genre"]
+#     genres = await s.get_genres_names(genres_id)
+#     current_genres = "Текущий жанры:\n" + genres + "\n"
+#     await call.message.answer(current_genres + msg.genres)
+#     await state.set_state(EditingProfile.EditingGenres)
 
 
 async def edit_name(message: types.Message, state: FSMContext):
@@ -279,21 +279,21 @@ async def edit_leader(message: types.Message, state: FSMContext):
     await state.reset_state()
     await message.answer(msg.done)
 
-
-async def edit_genres(message: types.Message, state: FSMContext):
-    '''Запись в бд'''
-    genres = message.text.lower()
-    genres = genres.split(',')
-    final_gen = [x.capitalize() for x in genres]
-    db.set_group_genre(str(message.from_user.id), final_gen)
-
-    print(final_gen)
-    '''Запись в кэш'''
-    info = cache.jget(f"musician_{str(message.from_user.id)}")
-    info["group_genre"] = final_gen
-    cache.jset(f"musician_{str(message.from_user.id)}", info)
-    await state.reset_state()
-    await message.answer(msg.done)
+#
+# async def edit_genres(message: types.Message, state: FSMContext):
+#     '''Запись в бд'''
+#     genres = message.text.lower()
+#     genres = genres.split(',')
+#     final_gen = [x.capitalize() for x in genres]
+#     db.set_group_genre(str(message.from_user.id), final_gen)
+#
+#     print(final_gen)
+#     '''Запись в кэш'''
+#     info = cache.jget(f"musician_{str(message.from_user.id)}")
+#     info["group_genre"] = final_gen
+#     cache.jset(f"musician_{str(message.from_user.id)}", info)
+#     await state.reset_state()
+#     await message.answer(msg.done)
 
 
 async def songs(message: types.Message):
@@ -357,7 +357,7 @@ def use_buttons(dp: Dispatcher):
     dp.register_callback_query_handler(add_to_favourite, add_callback.filter(), state="*")
     dp.register_callback_query_handler(delete_from_fav, delete_callback.filter(), state="*")
     '''Донаты&Подписка'''
-    dp.register_callback_query_handler(donate, lambda call: call.data and call.data == 'donate', state="*")
+    # dp.register_callback_query_handler(donate, lambda call: call.data and call.data == 'donate', state="*")
     dp.register_callback_query_handler(cancel_subscription,
                                        lambda call: call.data and call.data == 'cancel_subscription',
                                        state="*")
@@ -379,15 +379,15 @@ def use_buttons(dp: Dispatcher):
     dp.register_callback_query_handler(set_edit_pic, lambda call: call.data and call.data == 'edit_picture', state="*")
     dp.register_callback_query_handler(set_edit_leader, lambda call: call.data and call.data == 'edit_leader',
                                        state="*")
-    dp.register_callback_query_handler(set_edit_genres, lambda call: call.data and call.data == 'edit_genres',
-                                       state="*")
+    # dp.register_callback_query_handler(set_edit_genres, lambda call: call.data and call.data == 'edit_genres',
+    #                                    state="*")
 
     dp.register_message_handler(edit_name, state=EditingProfile.EditingName)
     dp.register_message_handler(edit_desc, state=EditingProfile.EditingDesc)
     dp.register_message_handler(edit_pic, state=EditingProfile.EditingPic,
                                 content_types=types.ContentTypes.PHOTO | types.ContentTypes.DOCUMENT)
     dp.register_message_handler(edit_leader, state=EditingProfile.EditingLeader)
-    dp.register_message_handler(edit_genres, state=EditingProfile.EditingGenres)
+    # dp.register_message_handler(edit_genres, state=EditingProfile.EditingGenres)
 
     dp.register_callback_query_handler(fav_group_info, fav_callback.filter(), state="*")
 

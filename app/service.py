@@ -7,7 +7,7 @@ from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers import RoundedModuleDrawer
 from qrcode.image.styles.colormasks import VerticalGradiantColorMask
 from app.callback_datas import groups_callback, user_reg_callback, choice_callback, action_callback, \
-    info_callback, add_callback, delete_callback, review_callback
+    info_callback, add_callback, delete_callback, review_callback, donate_callback
 from app.dialogs import msg
 from config import GENRES
 from database import cache, database
@@ -26,16 +26,16 @@ MAIN_KB = ReplyKeyboardMarkup(
     ]
 )
 
-DONATE_KB = InlineKeyboardMarkup(
-    inline_keyboard=[
-        [
-            InlineKeyboardButton(
-                text=msg.donate,
-                callback_data="donate"
-            )
-        ]
-    ]
-)
+# DONATE_KB = InlineKeyboardMarkup(
+#     inline_keyboard=[
+#         [
+#             InlineKeyboardButton(
+#                 text=msg.donate,
+#                 callback_data=donate_callback.new(id=artist_id)
+#             )
+#         ]
+#     ]
+# )
 
 CHOICE_KB = InlineKeyboardMarkup(
     inline_keyboard=[
@@ -111,7 +111,7 @@ def create_group_caption_kb(artist_id, number):
             [
                 InlineKeyboardButton(
                     text=msg.donate,
-                    callback_data="donate"
+                    callback_data=donate_callback.new(id=artist_id)
                 )
             ],
             [
@@ -170,7 +170,7 @@ def create_group_action_kb(artist_id, number, fav=False, location=True):
                 [
                     InlineKeyboardButton(
                         text=msg.donate,
-                        callback_data="donate"
+                        callback_data=donate_callback.new(id=artist_id)
                     )
                 ],
                 [
@@ -194,7 +194,7 @@ def create_group_action_kb(artist_id, number, fav=False, location=True):
                 [
                     InlineKeyboardButton(
                         text=msg.donate,
-                        callback_data="donate"
+                        callback_data=donate_callback.new(id=artist_id)
                     )
                 ],
                 [
@@ -218,7 +218,7 @@ def create_group_action_kb(artist_id, number, fav=False, location=True):
                 [
                     InlineKeyboardButton(
                         text=msg.donate,
-                        callback_data="donate"
+                        callback_data=donate_callback.new(id=artist_id)
                     )
                 ],
                 [
@@ -299,24 +299,40 @@ MUSICIAN_LC_KB = ReplyKeyboardMarkup(
 )
 
 
-async def get_genre_ids(user_id: str) -> list:
+async def get_genre_ids(user_id: str, musician:bool) -> list:
     """Функция получает id жанров пользователя в базе данных"""
     genres = cache.lrange(f"{user_id}", 0, -1)
-    if not genres:
-        if cache.jget(f"{user_id}_gen") != "editing":
-            try:
-                genres = database.get_user(user_id)["fav_genres"]
-            except TypeError:
+    if not musician:
+        if not genres:
+            if cache.jget(f"{user_id}_gen") != "editing":
+                try:
+                    genres = database.get_user(user_id)["fav_genres"]
+                except TypeError:
+                    return []
+            if genres is not None:
+                [cache.lpush(f"{user_id}", ge_id) for ge_id in genres]
+            else:
                 return []
-        if genres is not None:
-            [cache.lpush(f"{user_id}", ge_id) for ge_id in genres]
-        else:
-            return []
+    else:
+        if not genres:
+            if cache.jget(f"{user_id}_gen") != "editing":
+                try:
+                    genres = database.get_musician(user_id)["group_genre"]
+                except TypeError:
+                    return []
+            if genres is not None:
+                [cache.lpush(f"{user_id}", ge_id) for ge_id in genres]
+            else:
+                return []
     return genres
 
 
 CONFIG_KB = InlineKeyboardMarkup().row(
     InlineKeyboardButton(msg.btn_back, callback_data='main_window'),
+    InlineKeyboardButton(msg.config_btn_edit, callback_data='edit_config#')
+).add(InlineKeyboardButton(msg.config_btn_delete, callback_data='delete_config'))
+
+CONFIG_M_KB = InlineKeyboardMarkup().row(
     InlineKeyboardButton(msg.config_btn_edit, callback_data='edit_config#')
 ).add(InlineKeyboardButton(msg.config_btn_delete, callback_data='delete_config'))
 

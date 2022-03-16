@@ -12,6 +12,7 @@ from app.musician import MusicianFilter
 from app.registration_handlers import register_users
 from app.start_handlers import start_bot
 from app.streets_handlers import check_streets
+from app.paymnet_handler import pay_bot
 
 logger = logging.getLogger(__name__)
 
@@ -22,11 +23,13 @@ def register_all_filters(dp):
 
 def register_all_handlers(dp):
     start_bot(dp)
+    pay_bot(dp)
     register_users(dp)
     choose_genres(dp)
     use_buttons(dp)
     check_streets(dp)
     send_feedback(dp)
+
 
 
 async def set_bot_commands(bot: Bot):
@@ -62,7 +65,6 @@ async def main():
         await dp.start_polling()
     finally:
         await dp.storage.close()
-        print(dp.storage)
         await dp.storage.wait_closed()
         await bot.session.close()
 

@@ -16,6 +16,7 @@ class MusicianFilter(BoundFilter):
         if self.is_musician is None:
             return False
         musicians = cache.jget("musicians")
+        # print(musicians)
         if musicians is None:
             db.get_musicians()
         ids = []
