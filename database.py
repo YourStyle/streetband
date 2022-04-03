@@ -33,10 +33,8 @@ class Database:
 
     def __init__(self, name):
         self.name = name
-        # self.client = pymongo.MongoClient()
         self.client = pymongo.MongoClient("localhost", username='Admin', password='PasswordForMongo63',
                                           authSource='admin', authMechanism='SCRAM-SHA-256')
-        self.client = pymongo.MongoClient()
         self.db = self.client.Street
         logger.info("Database connection established")
         self.musicians = self.db.musicians
@@ -125,6 +123,7 @@ class Database:
 
     def get_musicians(self):
         buffer = list(self.musicians.find(projection={"_id": False, "subscription": False, "free_subscription": False}))
+        print(buffer)
         if cache.jget("musicians") != buffer:
             cache.jset("musicians", buffer)
 
@@ -170,7 +169,8 @@ class Database:
 
     def free_subscription(self, musician_id: str):
         self.musicians.update_one({"musician_id": musician_id},
-                                  {"$set": {"free_subscription": datetime.datetime.now(), "active_subscription": True}})
+                                  {"$set": {"free_subscription": datetime.datetime.now() + datetime.timedelta(days=90),
+                                            "active_subscription": True}})
 
     # def end_free_subscription(self, musician_id: str):
     #     if self.get_subscription(musician_id):
@@ -182,23 +182,24 @@ class Database:
 
     def end_subscription(self, musician_id: str):
         remain = self.get_subscription(musician_id)
-        if remain.days == 30 or remain.days == 90 :
+        if remain.days == 0:
             self.musicians.update_one({"musician_id": musician_id},
                                       {"$set": {"subscription": None, "active_subscription": False}})
 
     def get_subscription(self, musician_id: str):
         sub = self.musicians.find_one({"musician_id": musician_id})['subscription']
+        print(sub)
         if sub is None:
             return None
         else:
-            return datetime.datetime.now() - sub
+            return sub - datetime.datetime.now()
 
     def get_free_subscription(self, musician_id: str):
         sub = self.musicians.find_one({"musician_id": musician_id})["free_subscription"]
         if sub is None:
             return None
         else:
-            return datetime.datetime.now() - sub
+            return sub - datetime.datetime.now()
 
     def cancel_subscription(self, musician_id: str):
         if (self.get_subscription(musician_id) or self.get_free_subscription(musician_id)) is not None:
@@ -208,7 +209,7 @@ class Database:
 
     def activate_subscription(self, musician_id: str):
         self.musicians.update_one({"musician_id": musician_id},
-                                  {"$set": {"subscription": datetime.datetime.now(), "active_subscription": True}})
+                                  {"$set": {"subscription": datetime.datetime.now() + datetime.timedelta(days=30), "active_subscription": True}})
 
     def add_song(self, user_id: str):
         pass
