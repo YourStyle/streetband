@@ -3,9 +3,9 @@ from aiogram.dispatcher import filters, FSMContext
 from aiogram.types import CallbackQuery, LabeledPrice, ContentTypes
 
 from app.paymnet_handler import Item
-from app.states import Subscribing
+from gadgets.states import Subscribing
 from database import database as db
-from app import service as s
+from gadgets import service as s
 
 
 async def subscription(message: types.Message, state: FSMContext):
@@ -15,7 +15,7 @@ async def subscription(message: types.Message, state: FSMContext):
 
     if (subscribed or free) is not None and sub_active:
         if free:
-            time = 90 - free.days
+            time = free.days
             if time <= 0:
                 await message.answer(
                     f"Ваша пробная подписка закончилась! Сейчас пользователи не смогут найти вас на картах, "
@@ -45,11 +45,11 @@ async def subscription(message: types.Message, state: FSMContext):
                 await state.set_state(Subscribing.MusicianSubscribing)
             else:
                 await message.answer(
-                    f"Ваша пробная подписка действует ещё {time} дней. Через {time} дней мы автоматически спишем "
-                    f"ежемесячную плату",
+                    f"Ваша пробная подписка действует ещё {time} дней. Через {time} дней сможете оплатить обычную "
+                    f"версию подписки и продолжить пользоваться ботом",
                     reply_markup=s.CAN_KB)
         else:
-            time = 30 - subscribed.days
+            time = subscribed.days
             if time <= 0:
                 await message.answer(
                     f"Ваша подписка закончилась! Сейчас пользователи не смогут найти вас на картах, отсканировать ваш "
@@ -79,8 +79,7 @@ async def subscription(message: types.Message, state: FSMContext):
                 await state.set_state(Subscribing.MusicianSubscribing)
             else:
                 await message.answer(
-                    f"Ваша подписка действует ещё {time} дней. Через {time} дней мы автоматически спишем ежемесячную "
-                    f"плату",
+                    f"Ваша подписка действует ещё {time} дней. Через {time} дней вам нужно будет оплатить подписку ",
                     reply_markup=s.CAN_KB)
     elif sub_active is not None:
         await message.answer(
@@ -174,5 +173,5 @@ def subscribe_user(dp: Dispatcher):
     dp.register_callback_query_handler(activate_subscription,
                                        lambda call: call.data and call.data == 'activate_subscription',
                                        state="*")
-    dp.register_pre_checkout_query_handler(process_pre_checkout_query, state=Subscribing.MusicianSubscribing)
+    dp.register_pre_checkout_query_handler(process_pre_checkout_query, state="*")
     dp.register_message_handler(all_good, content_types=ContentTypes.SUCCESSFUL_PAYMENT, state=Subscribing.MusicianPaid)

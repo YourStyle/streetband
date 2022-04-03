@@ -2,12 +2,13 @@ from dataclasses import dataclass
 from typing import List
 from aiogram import Dispatcher, types
 from aiogram.dispatcher import FSMContext
-from aiogram.types import LabeledPrice, CallbackQuery
+from aiogram.types import LabeledPrice, CallbackQuery, ContentTypes
 
 import config
-from app.callback_datas import donate_callback
-from app.states import Donating
+from gadgets.callback_datas import donate_callback
+from gadgets.states import Donating
 from database import database as db
+from gadgets import service as s
 
 
 @dataclass
@@ -58,16 +59,21 @@ async def show_invoices(call: CallbackQuery, callback_data: dict, state: FSMCont
                                 **musician.generate_invoice(),
                                 payload=f"{buffer['musician_id']}")
     await state.set_state(Donating.UserDonating)
+    print(await state.get_state())
 
 
 async def process_pre_checkout_query(pre_checkout_query: types.PreCheckoutQuery, state: FSMContext):
     await pre_checkout_query.bot.answer_pre_checkout_query(pre_checkout_query_id=pre_checkout_query.id, ok=True)
-    await pre_checkout_query.bot.send_message(chat_id=pre_checkout_query.from_user.id,
-                                              text="Спасибо за поддержку музыканта 😎")
-    await state.reset_state()
+    await state.set_state(Donating.UserDonated)
 
+
+async def all_good(message: types.Message, state: FSMContext):
+    await message.answer(text="Спасибо за поддержку музыканта 😎", reply_markup=s.MAIN_KB)
+    db.activate_subscription(str(message.from_user.id))
+    await state.reset_state()
 
 
 def pay_bot(dp: Dispatcher):
     dp.register_callback_query_handler(show_invoices, donate_callback.filter(), state="*")
     dp.register_pre_checkout_query_handler(process_pre_checkout_query, state=Donating.UserDonating)
+    dp.register_message_handler(all_good, content_types=ContentTypes.SUCCESSFUL_PAYMENT, state=Donating.UserDonated)

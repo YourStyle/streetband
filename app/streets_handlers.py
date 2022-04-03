@@ -2,11 +2,11 @@ from aiogram import types, Dispatcher
 from aiogram.dispatcher import filters, FSMContext
 from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from app import service as s
-from app.calculate_distance import choose_shortest, calc_distance
-from app.callback_datas import groups_callback, location_callback, info_callback
-from app.dialogs import msg
-from app.states import ChoosingMusician
+from gadgets import service as s
+from scripts.calculate_distance import choose_shortest, calc_distance
+from gadgets.callback_datas import groups_callback, location_callback
+from gadgets.dialogs import msg
+from gadgets.states import ChoosingMusician
 from database import database as db, cache
 
 location_kb = InlineKeyboardMarkup([])

@@ -2,11 +2,10 @@ import re
 
 from aiogram import Dispatcher, types
 from aiogram.dispatcher import filters, FSMContext
-from aiogram.types import InputFile
 
-from app.dialogs import msg
-from database import database as db
-from app import service as s
+from gadgets.dialogs import msg
+from database import database as db, cache
+from gadgets import service as s
 
 
 async def start_qr(message: types.Message):
@@ -16,9 +15,17 @@ async def start_qr(message: types.Message):
     if not db.user_exists(message.from_user.id):
         user = db.add_user(str(message.from_user.id), user_name, language)
     musician = db.get_musician(str(message.text.split()[-1][4::]))
-    print(musician)
+    # print(musician)
     print(message.text.split()[-1][4::])
     info = []
+    counter = 0
+    db.get_musicians()
+    groups = cache.jget("musicians")
+    for i in groups:
+        if i["musician_id"] == message.text.split()[-1][4::]:
+            break
+        counter += 1
+    artist_id = musician["musician_id"]
 
     genre = "🎸Жанр:" + await s.get_genres_names(musician["group_genre"], False)
     info.append(genre)
@@ -28,7 +35,8 @@ async def start_qr(message: types.Message):
     info.append(leader)
 
     caption = "\n".join(info)
-    await message.answer_photo(photo=musician["group_pic"], caption=caption, reply_markup=s.DONATE_KB)
+    await message.answer_photo(photo=musician["group_pic"], caption=caption,
+                               reply_markup=s.create_group_caption_kb(artist_id, counter))
     await message.answer(msg.wellcome, reply_markup=s.MAIN_KB)
 
 

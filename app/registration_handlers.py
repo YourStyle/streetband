@@ -1,14 +1,14 @@
 from io import BytesIO
 
-from aiogram import Dispatcher, types, Bot
+from aiogram import Dispatcher, types
 from aiogram.dispatcher import FSMContext
-from aiogram.types import Message, CallbackQuery, InputFile
+from aiogram.types import CallbackQuery, InputFile
 
 from database import database as db
-from app import service as s
-from app.callback_datas import user_reg_callback, choice_callback, action_callback
-from app.dialogs import msg
-from app.states import RegistrationMusician, RegistrationUser
+from gadgets import service as s
+from gadgets.callback_datas import user_reg_callback, choice_callback, action_callback
+from gadgets.dialogs import msg
+from gadgets.states import RegistrationMusician, RegistrationUser
 
 
 async def register_musician(call: CallbackQuery):

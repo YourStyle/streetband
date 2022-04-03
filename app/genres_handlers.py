@@ -3,8 +3,8 @@ import asyncio
 from aiogram import Dispatcher, types
 from aiogram.types import CallbackQuery
 
-from app import service as s
-from app.dialogs import msg
+from gadgets import service as s
+from gadgets.dialogs import msg
 from config import YEAR
 from database import cache, database as db
 

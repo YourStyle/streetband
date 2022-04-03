@@ -2,9 +2,9 @@ from aiogram import Dispatcher, types
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery
 
-from app import service as s
-from app.callback_datas import review_callback
-from app.states import Feedback
+from gadgets import service as s
+from gadgets.callback_datas import review_callback
+from gadgets.states import Feedback
 from database import database as db
 
 

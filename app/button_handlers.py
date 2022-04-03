@@ -1,14 +1,13 @@
 import asyncio
-import datetime
 from aiogram import Dispatcher, types
 from aiogram.dispatcher import filters, FSMContext
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, InputFile
 from io import BytesIO
-from app import service as s
-from app.callback_datas import info_callback, add_callback, fav_callback, delete_callback
-from app.dialogs import msg
-from app.service import create_group_action_kb
-from app.states import EditingProfile
+from gadgets import service as s
+from gadgets.callback_datas import info_callback, add_callback, fav_callback, delete_callback
+from gadgets.dialogs import msg
+from gadgets.service import create_group_action_kb
+from gadgets.states import EditingProfile
 
 from database import database as db, cache
 
