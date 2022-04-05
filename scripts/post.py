@@ -59,7 +59,7 @@ async def noon_print():
                     # await state.set_state(Subscribing.MusicianSubscribing)
             except BotBlocked:
                 await asyncio.sleep(1)
-    await bot.send_message(chat_id="416546809", text="Ку-ку")
+    await bot.send_message(chat_id="416546809", text="Богдан, когда запуск бота ?")
 
 
 async def scheduler():
