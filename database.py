@@ -169,7 +169,7 @@ class Database:
 
     def free_subscription(self, musician_id: str):
         self.musicians.update_one({"musician_id": musician_id},
-                                  {"$set": {"free_subscription": datetime.datetime.now() + datetime.timedelta(days=90),
+                                  {"$set": {"free_subscription": datetime.datetime.now() + datetime.timedelta(days=91),
                                             "active_subscription": True}})
 
     # def end_free_subscription(self, musician_id: str):
@@ -209,7 +209,7 @@ class Database:
 
     def activate_subscription(self, musician_id: str):
         self.musicians.update_one({"musician_id": musician_id},
-                                  {"$set": {"subscription": datetime.datetime.now() + datetime.timedelta(days=30), "active_subscription": True}})
+                                  {"$set": {"subscription": datetime.datetime.now() + datetime.timedelta(days=31), "active_subscription": True}})
 
     def add_song(self, user_id: str):
         pass
