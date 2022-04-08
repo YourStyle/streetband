@@ -17,7 +17,7 @@ async def noon_print():
     bot = Bot(token=config.TOKEN, parse_mode="HTML")
     db.get_musicians()
     arr = cache.jget("musicians")
-    # print(arr)
+    print(arr)
     for user_id in arr:
         if user_id["active_subscription"] is True:
             try:
@@ -59,15 +59,12 @@ async def noon_print():
                     # await state.set_state(Subscribing.MusicianSubscribing)
             except BotBlocked:
                 await asyncio.sleep(1)
-    db.get_users()
-    arr_user = cache.jget("users_data")
-    for user in arr_user:
-        await bot.send_message(chat_id=user["user_id"], text="Богдан, когда запуск бота ?)")
+    await bot.send_message(chat_id="416546809", text="Ку-ку")
 
 
 async def scheduler():
     # print("test")
-    aioschedule.every().day.at("14:20").do(noon_print)
+    aioschedule.every().day.at("00:01").do(noon_print)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)

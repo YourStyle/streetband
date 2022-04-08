@@ -1,20 +1,23 @@
 import asyncio
 
-from aiogram import executor, Bot, Dispatcher
+from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.redis import RedisStorage2
-from aiogram.types import Update, BotCommand, BotCommandScopeDefault
+from aiogram.types import BotCommand, BotCommandScopeDefault
 import logging
 import config
 from app.button_handlers import use_buttons
 from app.feedback_handlers import send_feedback
 from app.genres_handlers import choose_genres
-from app.musician import MusicianFilter
+from filters.musician import MusicianFilter
 from app.registration_handlers import register_users
 from app.start_handlers import start_bot
 from app.streets_handlers import check_streets
 from app.paymnet_handler import pay_bot
 from app.subscription_handler import subscribe_user
+
 # from app.utils import check_subscription
+# from scripts.post import scheduler
+from scripts.post import scheduler
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +52,12 @@ async def set_bot_commands(bot: Bot):
         await bot.set_my_commands(commands=commands_list, scope=commands_scope, language_code=language)
 
 
-async def main():
+
+# async def on_startup(_):
+#     asyncio.create_task(scheduler())
+
+
+async def bot_main():
     logging.basicConfig(
         level=logging.INFO,
         format=u'%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s',
@@ -69,6 +77,13 @@ async def main():
         await dp.storage.close()
         await dp.storage.wait_closed()
         await bot.session.close()
+
+
+async def main():
+    await asyncio.gather(
+        bot_main(),
+        scheduler(),
+    )
 
 
 if __name__ == '__main__':
