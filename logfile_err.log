@@ -5761,3 +5761,647 @@ Traceback (most recent call last):
   File "/root/streetband/app/genres_handlers.py", line 24, in get_config
     reply_markup=s.genres_kb(database.get_user(str(message.from_user.id))["fav_genres"])
 TypeError: 'NoneType' object is not subscriptable
+2022-04-03 14:05:31.118 | INFO     | database:__init__:17 - Redis start
+2022-04-03 14:05:31.120 | INFO     | database:__init__:39 - Database connection established
+main.py:57 #INFO     [2022-04-03 14:05:31,133] - __main__ - Starting bot
+dispatcher.py:358 #INFO     [2022-04-03 14:05:31,165] - aiogram.dispatcher.dispatcher - Start polling.
+base_events.py:1707 #ERROR    [2022-04-03 14:11:26,197] - asyncio - Task exception was never retrieved
+future: <Task finished name='Task-47' coro=<Dispatcher._process_polling_updates() done, defined at /usr/local/lib/python3.8/dist-packages/aiogram/dispatcher/dispatcher.py:407> exception=TypeError("unsupported operand type(s) for -: 'str' and 'datetime.datetime'")>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/dist-packages/aiogram/dispatcher/dispatcher.py", line 415, in _process_polling_updates
+    for responses in itertools.chain.from_iterable(await self.process_updates(updates, fast)):
+  File "/usr/local/lib/python3.8/dist-packages/aiogram/dispatcher/dispatcher.py", line 235, in process_updates
+    return await asyncio.gather(*tasks)
+  File "/usr/local/lib/python3.8/dist-packages/aiogram/dispatcher/handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "/usr/local/lib/python3.8/dist-packages/aiogram/dispatcher/dispatcher.py", line 256, in process_update
+    return await self.message_handlers.notify(update.message)
+  File "/usr/local/lib/python3.8/dist-packages/aiogram/dispatcher/handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "/root/streetband/app/subscription_handler.py", line 12, in subscription
+    subscribed = db.get_subscription(str(message.from_user.id))
+  File "/root/streetband/database.py", line 195, in get_subscription
+    return sub - datetime.datetime.now()
+TypeError: unsupported operand type(s) for -: 'str' and 'datetime.datetime'
+2022-04-08 14:03:42.441 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:03:42.443 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:03:44.322 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:03:44.324 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:03:46.233 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:03:46.235 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:03:48.142 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:03:48.144 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:03:50.024 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:03:50.026 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:03:52.906 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:03:52.908 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:03:55.774 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:03:55.777 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:03:58.671 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:03:58.673 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:01.559 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:01.561 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:04.465 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:04.467 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:07.422 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:07.425 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:09.341 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:09.343 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:11.235 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:11.238 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:13.140 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:13.143 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:15.030 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:15.032 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:16.931 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:16.934 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:18.791 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:18.793 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:20.714 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:20.717 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:23.601 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:23.603 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:25.795 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:25.800 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:27.793 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:27.795 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:30.702 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:30.704 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:32.578 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:32.580 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:34.489 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:34.491 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:36.400 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:36.403 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:39.332 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:39.335 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:42.253 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:42.257 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:44.145 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:44.148 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:47.025 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:47.028 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:48.907 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:48.909 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:50.862 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:50.865 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:52.796 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:52.799 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:54.688 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:54.690 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:56.579 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:56.582 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:04:59.457 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:04:59.459 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:05:01.356 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:05:01.358 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:05:03.277 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:05:03.280 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:05:05.200 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:05:05.202 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:05:07.108 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:05:07.111 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:05:10.027 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:05:10.030 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:05:12.950 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:05:12.952 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:05:14.835 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:05:14.837 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:05:16.720 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:05:16.722 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:05:19.589 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:05:19.592 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:05:22.463 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:05:22.465 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:05:25.363 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:05:25.365 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:05:28.407 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:05:28.410 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:05:31.317 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:05:31.319 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:05:34.217 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:05:34.219 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:05:37.113 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:05:37.116 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:05:40.036 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:05:40.038 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:05:42.074 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:05:42.078 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:05:45.007 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:05:45.009 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:05:46.906 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:05:46.908 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:05:48.809 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:05:48.813 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:05:51.798 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:05:51.800 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:05:54.675 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:05:54.678 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:05:57.565 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:05:57.567 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:06:00.465 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:06:00.468 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:06:03.373 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:06:03.376 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:06:06.305 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:06:06.307 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:06:09.190 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:06:09.193 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:06:11.147 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:06:11.151 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:06:13.045 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:06:13.048 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:06:15.047 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:06:15.050 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:06:17.969 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:06:17.972 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:06:20.861 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:06:20.864 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:06:23.731 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:06:23.733 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:06:25.599 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:06:25.601 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:06:27.490 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:06:27.493 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:06:29.657 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:06:29.661 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:06:31.579 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:06:31.581 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:06:34.469 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:06:34.472 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:06:37.332 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:06:37.335 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:06:39.255 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:06:39.258 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:06:41.185 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:06:41.188 | INFO     | database:__init__:39 - Database connection established
+Traceback (most recent call last):
+  File "main.py", line 20, in <module>
+    from scripts.post import scheduler
+  File "/root/streetband/scripts/post.py", line 3, in <module>
+    import aioschedule
+ModuleNotFoundError: No module named 'aioschedule'
+2022-04-08 14:06:44.101 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:06:44.105 | INFO     | database:__init__:39 - Database connection established
+main.py:65 #INFO     [2022-04-08 14:06:44,111] - __main__ - Starting bot
+dispatcher.py:358 #INFO     [2022-04-08 14:06:44,152] - aiogram.dispatcher.dispatcher - Start polling.
+2022-04-08 14:10:15.391 | INFO     | database:__init__:17 - Redis start
+2022-04-08 14:10:15.393 | INFO     | database:__init__:39 - Database connection established
+main.py:65 #INFO     [2022-04-08 14:10:15,402] - __main__ - Starting bot
+dispatcher.py:358 #INFO     [2022-04-08 14:10:15,441] - aiogram.dispatcher.dispatcher - Start polling.
+__init__.py:461 #INFO     [2022-04-08 14:11:00,458] - schedule - Running job Every 1 day at 14:11:00 do noon_print() (last run: [never], next run: 2022-04-08 14:11:00)
+base_events.py:1707 #ERROR    [2022-04-08 14:11:00,556] - asyncio - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x7fa5d92cdfa0>
+base_events.py:1707 #ERROR    [2022-04-08 14:11:00,556] - asyncio - Unclosed connector
+connections: ['[(<aiohttp.client_proto.ResponseHandler object at 0x7fa5d9b53400>, 1793584.913014223)]']
+connector: <aiohttp.connector.TCPConnector object at 0x7fa5d92cd4c0>
