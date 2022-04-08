@@ -123,12 +123,16 @@ class Database:
 
     def get_musicians(self):
         buffer = list(self.musicians.find(projection={"_id": False, "subscription": False, "free_subscription": False}))
-        print(buffer)
         if cache.jget("musicians") != buffer:
             cache.jset("musicians", buffer)
 
     def get_user(self, user_id: str) -> Dict:
         return self.users.find_one({"user_id": user_id})
+
+    def get_users(self):
+        buffer = list(self.users.find(projection={"_id": False}))
+        if cache.jget("users_data") != buffer:
+            cache.jset("users_data", buffer)
 
     def is_musician(self, user_id: str) -> bool:
         return self.users.find_one({"user_id": user_id})["musician"]
