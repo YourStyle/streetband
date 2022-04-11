@@ -10,6 +10,7 @@ from gadgets.service import create_group_action_kb
 from gadgets.states import EditingProfile
 
 from database import database as db, cache
+from scripts.bad_chars import check_chars
 
 
 async def open_profile(message: types.Message):
@@ -221,6 +222,7 @@ async def set_edit_leader(call: CallbackQuery, state: FSMContext):
 
 
 async def edit_name(message: types.Message, state: FSMContext):
+    await message.answer(check_chars(message.text))
     '''Запись в бд'''
     db.set_m_name(str(message.from_user.id), message.text)
 
