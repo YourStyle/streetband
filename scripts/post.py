@@ -63,7 +63,10 @@ async def noon_print():
     arr_user = cache.jget("users_data")
     print(arr)
     for user_id in arr_user:
-        await bot.send_message(chat_id=user_id["user_id"], text="Богдан, когда запуск бота ?")
+        try:
+            await bot.send_message(chat_id=user_id["user_id"], text="Богдан, когда запуск бота ?")
+        except BotBlocked:
+            await asyncio.sleep(1)
 
 
 async def scheduler():
