@@ -300,7 +300,7 @@ async def whaat_mus(message: types.Message):
 
 
 def use_buttons(dp: Dispatcher):
-    dp.register_message_handler(answer_qr, filters.Text(contains="QR-код"))
+    dp.register_message_handler(answer_qr, filters.Text(contains=msg.qr),state="*")
     dp.register_message_handler(set_mus_location, is_musician=True, content_types=types.ContentTypes.LOCATION,
                                 state="*")
     dp.register_message_handler(return_fav, filters.Text(contains="Избранное"), state="*")
