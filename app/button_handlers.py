@@ -170,6 +170,7 @@ async def edit_group(message: types.Message):
 
 
 async def set_edit_name(call: CallbackQuery, state: FSMContext):
+    await state.reset_state()
     await call.answer()
     name = cache.jget(f"musician_{str(call.from_user.id)}")["musician_name"]
     current_name = "Текущее название: " + name + "\n"
@@ -178,6 +179,7 @@ async def set_edit_name(call: CallbackQuery, state: FSMContext):
 
 
 async def set_edit_pic(call: CallbackQuery, state: FSMContext):
+    await state.reset_state()
     await call.answer()
     photo = cache.jget(f"musician_{str(call.from_user.id)}")["group_pic"]
     current_name = "Текущее фото: \n"
@@ -186,6 +188,7 @@ async def set_edit_pic(call: CallbackQuery, state: FSMContext):
 
 
 async def set_edit_desc(call: CallbackQuery, state: FSMContext):
+    await state.reset_state()
     await call.answer()
     desc = cache.jget(f"musician_{str(call.from_user.id)}")["group_description"]
     current_desc = "Текущее описание: " + desc + "\n"
@@ -194,6 +197,7 @@ async def set_edit_desc(call: CallbackQuery, state: FSMContext):
 
 
 async def set_edit_leader(call: CallbackQuery, state: FSMContext):
+    await state.reset_state()
     await call.answer()
     leader = cache.jget(f"musician_{str(call.from_user.id)}")["group_leader"]
     if call.from_user.username is None:
@@ -278,21 +282,7 @@ async def edit_leader(message: types.Message, state: FSMContext):
     await state.reset_state()
     await message.answer(msg.done)
 
-#
-# async def edit_genres(message: types.Message, state: FSMContext):
-#     '''Запись в бд'''
-#     genres = message.text.lower()
-#     genres = genres.split(',')
-#     final_gen = [x.capitalize() for x in genres]
-#     db.set_group_genre(str(message.from_user.id), final_gen)
-#
-#     print(final_gen)
-#     '''Запись в кэш'''
-#     info = cache.jget(f"musician_{str(message.from_user.id)}")
-#     info["group_genre"] = final_gen
-#     cache.jset(f"musician_{str(message.from_user.id)}", info)
-#     await state.reset_state()
-#     await message.answer(msg.done)
+
 
 
 async def songs(message: types.Message):
@@ -310,7 +300,7 @@ async def whaat_mus(message: types.Message):
 
 
 def use_buttons(dp: Dispatcher):
-    dp.register_message_handler(answer_qr, filters.Text(contains="QR"))
+    dp.register_message_handler(answer_qr, filters.Text(contains="QR-код"))
     dp.register_message_handler(set_mus_location, is_musician=True, content_types=types.ContentTypes.LOCATION,
                                 state="*")
     dp.register_message_handler(return_fav, filters.Text(contains="Избранное"), state="*")
@@ -320,7 +310,6 @@ def use_buttons(dp: Dispatcher):
     '''Раздел с избранным'''
     dp.register_callback_query_handler(add_to_favourite, add_callback.filter(), state="*")
     dp.register_callback_query_handler(delete_from_fav, delete_callback.filter(), state="*")
-    '''Донаты&Подписка'''
 
     dp.register_callback_query_handler(back_form_fav, lambda call: call.data and call.data == 'back_to_menu', state="*")
     dp.register_callback_query_handler(return_fav_groups, lambda call: call.data and call.data == 'back_to_fav',
