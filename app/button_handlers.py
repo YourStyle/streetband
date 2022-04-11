@@ -16,7 +16,8 @@ async def open_profile(message: types.Message):
     await message.answer(text="Вы открыли ваш личный кабинет", reply_markup=s.MAIN_KB)
 
 
-async def group_info(call: CallbackQuery, callback_data: dict):
+async def group_info(call: CallbackQuery, callback_data: dict, state: FSMContext):
+    await state.reset_state()
     await call.answer()
     groups = cache.jget("musicians")
     group = groups[int(callback_data["db_number"])]
@@ -64,13 +65,15 @@ async def donate(call: CallbackQuery):
     await call.message.answer(text="Спасибо, мы получили ваш платёж")
 
 
-async def set_mus_location(message: types.Message):
+async def set_mus_location(message: types.Message, state: FSMContext):
+    await state.reset_state()
     print("?")
     db.set_group_current_location(str(message.from_user.id), dict(message.location))
     await message.answer(text="Местоположение установлено")
 
 
-async def answer_qr(message: types.Message):
+async def answer_qr(message: types.Message, state: FSMContext):
+    await state.reset_state()
     bio = BytesIO()
     mus_id = str(message.from_user.id)
     bio.name = f'logo_{mus_id}.png'
@@ -283,12 +286,10 @@ async def edit_leader(message: types.Message, state: FSMContext):
     await message.answer(msg.done)
 
 
-
-
-async def songs(message: types.Message):
+async def songs(message: types.Message, state: FSMContext):
     '''Реализовать после запуска'''
+    await state.reset_state()
     await message.answer("⚠️Этот раздел находится в разработке ⚠️")
-
 
 
 async def whaat(message: types.Message):
@@ -300,7 +301,7 @@ async def whaat_mus(message: types.Message):
 
 
 def use_buttons(dp: Dispatcher):
-    dp.register_message_handler(answer_qr, filters.Text(contains=msg.qr),state="*")
+    dp.register_message_handler(answer_qr, filters.Text(contains=msg.qr), state="*")
     dp.register_message_handler(set_mus_location, is_musician=True, content_types=types.ContentTypes.LOCATION,
                                 state="*")
     dp.register_message_handler(return_fav, filters.Text(contains="Избранное"), state="*")
@@ -337,4 +338,3 @@ def use_buttons(dp: Dispatcher):
     '''Тестовый хендлер'''
     # dp.register_message_handler(whaat_mus, is_musician=True, content_types=types.ContentTypes.LOCATION, state="*")
     # dp.register_message_handler(whaat, content_types=types.ContentTypes.LOCATION, state="*")
-

@@ -9,6 +9,7 @@ from gadgets import service as s
 
 
 async def subscription(message: types.Message, state: FSMContext):
+    await state.reset_state()
     subscribed = db.get_subscription(str(message.from_user.id))
     free = db.get_free_subscription(str(message.from_user.id))
     sub_active = db.get_musician(str(message.from_user.id))["active_subscription"]
