@@ -64,14 +64,14 @@ async def noon_print():
     print(arr)
     for user_id in arr_user:
         try:
-            await bot.send_message(chat_id=user_id["user_id"], text="Богдан, когда запуск бота ?")
+            await bot.send_message(chat_id="416546809", text="Богдан, когда запуск бота ?")
         except BotBlocked:
             await asyncio.sleep(1)
 
 
 async def scheduler():
     # print("test")
-    aioschedule.every().day.at("00:01").do(noon_print)
+    aioschedule.every().day.at("15:03").do(noon_print)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
