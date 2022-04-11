@@ -71,7 +71,7 @@ async def noon_print():
 
 async def scheduler():
     # print("test")
-    aioschedule.every().day.at("15:25").do(noon_print)
+    aioschedule.every().day.at("15:30").do(noon_print)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
