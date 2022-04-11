@@ -2,6 +2,12 @@ import re
 
 
 def check_chars(string: str):
-    result = re.match(r"/&#\d{1,6};/gm", f"{string}")
-    print(result)
-    return result
+    prog = re.compile("&#\d{1,6};")
+    print(string)
+    result = prog.match(string)
+    if result is not None:
+        print("Bad char")
+        return False
+    else:
+        print("OK")
+        return True
