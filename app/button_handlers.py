@@ -277,7 +277,6 @@ async def edit_desc(message: types.Message, state: FSMContext):
         cache.jset(f"musician_{str(message.from_user.id)}", info)
 
         await state.reset_state()
-
         await message.answer(msg.done)
 
 
