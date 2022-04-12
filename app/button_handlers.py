@@ -320,7 +320,7 @@ async def add_song_button(call: types.CallbackQuery):
 
 
 async def save_song(message: types.Message):
-    db.add_song(str(message.from_user.id), str(message.audio.file_id), str(message.audio.file_name))
+    db.add_song(str(message.from_user.id), str(message.audio.file_id), str(message.audio.file_name.replace('.m4a', '')))
     await message.answer("Мы сохранили вашу песню !)")
 
 
@@ -329,13 +329,16 @@ async def delete_song_button(call: types.CallbackQuery):
     # await message.answer("⚠️Этот раздел находится в разработке ⚠️")
     all_songs = db.get_songs(str(call.from_user.id))
     songs_kb = InlineKeyboardMarkup()
+    counter = 0
     for i in all_songs:
-        songs_kb.row(InlineKeyboardButton(i[0], callback_data=f"s_{i[1]}"))
+        songs_kb.row(InlineKeyboardButton(i[0], callback_data=f"s_{counter}"))
+        counter += 1
     await call.message.answer("Список ваших песен", reply_markup=songs_kb)
 
 
 async def remove_song(call: types.CallbackQuery, callback_data: dict):
-    # song_id = callback_data.
+    # song_id = callback_data
+    # all_songs = db.get_songs(str(call.from_user.id))
     await call.message.answer(callback_data)
 
 
