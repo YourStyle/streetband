@@ -295,7 +295,6 @@ async def edit_leader(message: types.Message, state: FSMContext):
 
 
 async def songs(message: types.Message, state: FSMContext):
-    '''Реализовать после запуска'''
     await state.reset_state()
     mus_songs = db.get_songs(str(message.from_user.id))
     if len(mus_songs) == 0:
@@ -344,19 +343,10 @@ async def remove_song(call: types.CallbackQuery, callback_data: dict):
                                     reply_markup=s.delete_cancel_kb(song_id))
 
 
-# async def back_to_songs(call: types.CallbackQuery):
-#     await call.answer()
-#     # await message.answer("⚠️Этот раздел находится в разработке ⚠️")
-#     all_songs = db.get_songs(str(call.from_user.id))
-#     songs_kb = InlineKeyboardMarkup()
-#     counter = 0
-#     for i in all_songs:
-#         songs_kb.row(InlineKeyboardButton(i[0], callback_data=songs_callback.new(id=counter)))
-#         counter += 1
-#     await call.message.answer("Список ваших песен", reply_markup=songs_kb)
-
-
 async def delet_fin(call: types.CallbackQuery):
+    song_id = call.data.replace("delete_song_", "")
+    all_songs = db.get_songs(str(call.from_user.id))
+    db.delete_song(str(call.from_user.id), all_songs[int(song_id)])
     await call.message.answer(call.data)
 
 
@@ -366,13 +356,13 @@ async def delete_songs_button(call: types.CallbackQuery):
     db.delete_songs(str(call.from_user.id))
     await call.message.answer("Мы удалили все ваши песни !")
 
-
-async def whaat(message: types.Message):
-    await message.answer("Лох")
-
-
-async def whaat_mus(message: types.Message):
-    await message.answer("Музыкант")
+#
+# async def whaat(message: types.Message):
+#     await message.answer("Лох")
+#
+#
+# async def whaat_mus(message: types.Message):
+#     await message.answer("Музыкант")
 
 
 def use_buttons(dp: Dispatcher):
