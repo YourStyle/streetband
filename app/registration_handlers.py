@@ -9,6 +9,7 @@ from gadgets import service as s
 from gadgets.callback_datas import user_reg_callback, choice_callback, action_callback
 from gadgets.dialogs import msg
 from gadgets.states import RegistrationMusician, RegistrationUser
+from scripts.bad_chars import check_chars
 
 
 async def register_musician(call: CallbackQuery):
@@ -45,17 +46,23 @@ async def back(call: CallbackQuery):
 
 
 async def get_name(message: types.Message, state: FSMContext):
-    name = message.text
-    await state.update_data(group_name=name)
-    await message.answer(msg.requisites, reply_markup=s.BACK_OR_CANCEL_KB)
-    await RegistrationMusician.next()
+    if check_chars(message.text):
+        name = message.text
+        await state.update_data(group_name=name)
+        await message.answer(msg.requisites, reply_markup=s.BACK_OR_CANCEL_KB)
+        await RegistrationMusician.next()
+    else:
+        await message.answer(msg.bad_chars)
 
 
 async def get_requisites(message: types.Message, state: FSMContext):
-    requisites = message.text
-    await state.update_data(group_requisites=requisites)
-    await message.answer(msg.picture, reply_markup=s.BACK_OR_CANCEL_KB)
-    await RegistrationMusician.next()
+    if check_chars(message.text):
+        requisites = message.text
+        await state.update_data(group_requisites=requisites)
+        await message.answer(msg.picture, reply_markup=s.BACK_OR_CANCEL_KB)
+        await RegistrationMusician.next()
+    else:
+        await message.answer(msg.bad_chars)
 
 
 async def get_pic(message: types.Message, state: FSMContext):
@@ -71,30 +78,36 @@ async def get_pic(message: types.Message, state: FSMContext):
 
 
 async def get_genres(message: types.Message, state: FSMContext):
-    genres = message.text.lower()
-    await state.update_data(group_genres=genres)
-    await message.answer(msg.description, reply_markup=s.BACK_OR_CANCEL_KB)
-    await RegistrationMusician.next()
+    if check_chars(message.text):
+        genres = message.text.lower()
+        await state.update_data(group_genres=genres)
+        await message.answer(msg.description, reply_markup=s.BACK_OR_CANCEL_KB)
+        await RegistrationMusician.next()
+    else:
+        await message.answer(msg.bad_chars)
 
 
 async def get_desc(message: types.Message, state: FSMContext):
-    description = message.text
-    current_info = await state.get_data()
-    await state.update_data(group_description=description)
-    if message.from_user.username is None:
-        leader = message.from_user.first_name
+    if check_chars(message.text):
+        description = message.text
+        current_info = await state.get_data()
+        await state.update_data(group_description=description)
+        if message.from_user.username is None:
+            leader = message.from_user.first_name
+        else:
+            leader = message.from_user.username
+        await state.update_data(group_leader=leader)
+        name = current_info.get('group_name')
+        requisites = current_info.get('group_requisites')
+        genres = current_info.get('group_genres')
+        data = "Название группы: {}\nРеквизиты: {}\nЖанры: {}\nОписание: {}".format(name, requisites, genres,
+                                                                                    description)
+        reg_data = await message.answer_photo(photo=current_info.get('group_pic'), caption=data,
+                                              reply_markup=s.BACK_OR_APPROVE_KB)
+        await state.update_data(group_pic=reg_data.photo[-1].file_id)
+        await RegistrationMusician.next()
     else:
-        leader = message.from_user.username
-    await state.update_data(group_leader=leader)
-    name = current_info.get('group_name')
-    requisites = current_info.get('group_requisites')
-    genres = current_info.get('group_genres')
-    data = "Название группы: {}\nРеквизиты: {}\nЖанры: {}\nОписание: {}".format(name, requisites, genres,
-                                                                                description)
-    reg_data = await message.answer_photo(photo=current_info.get('group_pic'), caption=data,
-                                          reply_markup=s.BACK_OR_APPROVE_KB)
-    await state.update_data(group_pic=reg_data.photo[-1].file_id)
-    await RegistrationMusician.next()
+        await message.answer(msg.bad_chars)
 
 
 async def register_musician_info(call: CallbackQuery, state: FSMContext):
@@ -176,7 +189,7 @@ async def register_musician_final(call: CallbackQuery, state: FSMContext):
                                 text="Ниже ваш личный кабинет",
                                 reply_markup=s.MUSICIAN_LC_KB)
     await state.reset_state(with_data=True)
-    print(await state.get_state())
+    # print(await state.get_state())
 
 
 async def register_user(call: CallbackQuery):

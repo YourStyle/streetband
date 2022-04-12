@@ -139,7 +139,7 @@ async def fav_group_info(call: CallbackQuery, callback_data: dict):
 
 async def delete_from_fav(call: CallbackQuery, callback_data: dict):
     await call.answer()
-    print(callback_data)
+    # print(callback_data)
     await call.message.edit_reply_markup(create_group_action_kb(callback_data["id"], callback_data["id"], fav=False,
                                                                 location=False))
     temp = await call.message.answer(text="Музыкант удалён из избранного")
