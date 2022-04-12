@@ -340,7 +340,8 @@ async def remove_song(call: types.CallbackQuery, callback_data: dict):
     await call.answer()
     song_id = callback_data["id"]
     all_songs = db.get_songs(str(call.from_user.id))
-    await call.message.answer_audio(all_songs[int(song_id)][1], reply_markup=s.delete_cancel_kb(song_id))
+    await call.message.answer_audio(all_songs[int(song_id)][1], caption=f"{all_songs[int(song_id)][0]}",
+                                    reply_markup=s.delete_cancel_kb(song_id))
 
 
 # async def back_to_songs(call: types.CallbackQuery):
@@ -400,7 +401,6 @@ def use_buttons(dp: Dispatcher):
                                        state="*")
     dp.register_callback_query_handler(delet_fin, lambda call: call.data.startswith('delete_song_'),
                                        state="*")
-
 
     '''Раздел с избранным'''
     dp.register_callback_query_handler(add_to_favourite, add_callback.filter(), state="*")
