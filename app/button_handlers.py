@@ -312,7 +312,7 @@ async def songs(message: types.Message, state: FSMContext):
 async def songs_save(message: types.Message):
     '''Реализовать после запуска'''
     # await message.answer("⚠️Этот раздел находится в разработке ⚠️")
-    db.add_song(message.from_user.id, message.audio.file_id)
+    db.add_song(str(message.from_user.id), str(message.audio.file_id))
     await message.answer("Мы сохранили вашу песню !)")
 
 
