@@ -305,7 +305,7 @@ async def songs_save(message: types.Message):
     '''Реализовать после запуска'''
     # await message.answer("⚠️Этот раздел находится в разработке ⚠️")
     db.add_song(message.from_user.id, message.audio.file_id)
-    songs = db.get_songs(message.from_user.id)
+    songs = db.get_songs(str(message.from_user.id))
     if len(songs) == 1:
         await message.answer("Список ваших песен:")
         await message.answer_audio(songs[0], protect_content=True)
