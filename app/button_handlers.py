@@ -301,6 +301,12 @@ async def songs(message: types.Message, state: FSMContext):
     await message.answer(message)
 
 
+async def songs_save(message: types.Message):
+    '''Реализовать после запуска'''
+    # await message.answer("⚠️Этот раздел находится в разработке ⚠️")
+    await message.answer(message)
+
+
 async def whaat(message: types.Message):
     await message.answer("Лох")
 
@@ -315,8 +321,14 @@ def use_buttons(dp: Dispatcher):
                                 state="*")
     dp.register_message_handler(return_fav, filters.Text(contains="Избранное"), state="*")
     dp.register_message_handler(edit_group, filters.Text(contains="Профиль"), state="*")
-    dp.register_message_handler(songs, filters.Text(contains="Песни"),content_types=types.ContentTypes.AUDIO, state="*")
+
     dp.register_callback_query_handler(group_info, info_callback.filter(), state="*")
+
+    '''Раздел с песнями'''
+    dp.register_message_handler(songs, filters.Text(contains="Песни"),
+                                state="*")
+    dp.register_message_handler(songs_save, content_types=types.ContentTypes.AUDIO,
+                                state="*")
 
     '''Раздел с избранным'''
     dp.register_callback_query_handler(add_to_favourite, add_callback.filter(), state="*")
