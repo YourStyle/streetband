@@ -353,12 +353,12 @@ def use_buttons(dp: Dispatcher):
     '''Раздел с песнями'''
     dp.register_message_handler(songs, filters.Text(contains="Песни"),
                                 state="*")
-    dp.register_message_handler(add_song_button, lambda call: call.data and call.data == 'add_song',
-                                state="*")
-    dp.register_message_handler(delete_song_button, lambda call: call.data and call.data == 'delete_song',
-                                state="*")
-    dp.register_message_handler(delete_songs_button, lambda call: call.data and call.data == 'delete_all_songs',
-                                state="*")
+    dp.register_callback_query_handler(add_song_button, lambda call: call.data and call.data == 'add_song',
+                                       state="*")
+    dp.register_callback_query_handler(delete_song_button, lambda call: call.data and call.data == 'delete_song',
+                                       state="*")
+    dp.register_callback_query_handler(delete_songs_button, lambda call: call.data and call.data == 'delete_all_songs',
+                                       state="*")
 
     '''Раздел с избранным'''
     dp.register_callback_query_handler(add_to_favourite, add_callback.filter(), state="*")
