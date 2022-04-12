@@ -377,7 +377,7 @@ def use_buttons(dp: Dispatcher):
                                        state="*")
     dp.register_callback_query_handler(delete_song_button, lambda call: call.data and call.data == 'delete_song',
                                        state="*")
-    dp.register_callback_query_handler(remove_song, lambda call: call.data and call.data.contains('s_'),
+    dp.register_callback_query_handler(remove_song, lambda call: call.data.startswith('s_'),
                                        state="*")
 
     '''Раздел с избранным'''
