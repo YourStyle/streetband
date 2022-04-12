@@ -331,15 +331,15 @@ async def delete_song_button(call: types.CallbackQuery):
     songs_kb = InlineKeyboardMarkup()
     counter = 0
     for i in all_songs:
-        songs_kb.row(InlineKeyboardButton(i[0], callback_data=songs_callback.new(id={i[1]})))
+        songs_kb.row(InlineKeyboardButton(i[0], callback_data=songs_callback.new(id=counter)))
         counter += 1
     await call.message.answer("Список ваших песен", reply_markup=songs_kb)
 
 
 async def remove_song(call: types.CallbackQuery, callback_data: dict):
-    # song_id = callback_data
-    # all_songs = db.get_songs(str(call.from_user.id))
-    await call.message.answer(callback_data)
+    song_id = callback_data["id"]
+    all_songs = db.get_songs(str(call.from_user.id))
+    await call.message.answer(all_songs[int(song_id)])
 
 
 async def delete_songs_button(call: types.CallbackQuery):
