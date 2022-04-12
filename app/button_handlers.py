@@ -223,8 +223,6 @@ async def set_edit_leader(call: CallbackQuery, state: FSMContext):
 
 async def edit_name(message: types.Message, state: FSMContext):
     if check_chars(message.text):
-        await message.answer("Мы не можете сохранить такие символы, введите что-то другое")
-    else:
         '''Запись в бд'''
         db.set_m_name(str(message.from_user.id), message.text)
 
@@ -235,6 +233,9 @@ async def edit_name(message: types.Message, state: FSMContext):
 
         await state.reset_state()
         await message.answer(msg.done)
+    else:
+        await message.answer("Мы не можете сохранить такие символы, введите что-то другое")
+
 
 
 async def edit_pic(message: types.Message, state: FSMContext):
@@ -266,8 +267,6 @@ async def edit_pic(message: types.Message, state: FSMContext):
 
 async def edit_desc(message: types.Message, state: FSMContext):
     if check_chars(message.text):
-        await message.answer("Мы не можете сохранить такие символы, введите что-то другое")
-    else:
         '''Запись в бд'''
         db.set_group_description(str(message.from_user.id), message.text)
 
@@ -278,12 +277,12 @@ async def edit_desc(message: types.Message, state: FSMContext):
 
         await state.reset_state()
         await message.answer(msg.done)
+    else:
+        await message.answer("Мы не можете сохранить такие символы, введите что-то другое")
 
 
 async def edit_leader(message: types.Message, state: FSMContext):
     if check_chars(message.text):
-        await message.answer("Мы не можете сохранить такие символы, введите что-то другое")
-    else:
         '''Запись в бд'''
         db.set_group_leader(str(message.from_user.id), message.text)
 
@@ -293,6 +292,9 @@ async def edit_leader(message: types.Message, state: FSMContext):
         cache.jset(f"musician_{str(message.from_user.id)}", info)
         await state.reset_state()
         await message.answer(msg.done)
+    else:
+        await message.answer("Мы не можете сохранить такие символы, введите что-то другое")
+
 
 
 async def songs(message: types.Message, state: FSMContext):
