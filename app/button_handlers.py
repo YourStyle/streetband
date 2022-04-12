@@ -297,21 +297,23 @@ async def edit_leader(message: types.Message, state: FSMContext):
 async def songs(message: types.Message, state: FSMContext):
     '''Реализовать после запуска'''
     await state.reset_state()
-    await message.answer("⚠️Этот раздел находится в разработке ⚠️")
-    await message.answer(message)
+    mus_songs = db.get_songs(str(message.from_user.id))
+    if len(mus_songs) == 0:
+        await message.answer("Отправьте песню которую хотите добавить к себе на страницу")
+    elif len(mus_songs) == 1:
+        await message.answer_audio(mus_songs[0], protect_content=True)
+        await message.answer("Список ваших песен", reply_markup=InlineKeyboardMarkup(InlineKeyboardButton("Добавить")))
+    elif len(mus_songs) > 1:
+        await message.answer_media_group(mus_songs, protect_content=True)
+        await message.answer("Список ваших песен", reply_markup=InlineKeyboardMarkup(InlineKeyboardButton("Добавить")))
+    # await message.answer("⚠️Этот раздел находится в разработке ⚠️")
 
 
 async def songs_save(message: types.Message):
     '''Реализовать после запуска'''
     # await message.answer("⚠️Этот раздел находится в разработке ⚠️")
     db.add_song(message.from_user.id, message.audio.file_id)
-    songs = db.get_songs(str(message.from_user.id))
-    if len(songs) == 1:
-        await message.answer("Список ваших песен:")
-        await message.answer_audio(songs[0], protect_content=True)
-    elif len(songs) > 1:
-        await message.answer("Список ваших песен:")
-        await message.answer_media_group(songs, protect_content=True)
+    await message.answer("Мы сохранили вашу песню !)")
 
 
 async def whaat(message: types.Message):
