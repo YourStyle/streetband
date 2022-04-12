@@ -299,24 +299,37 @@ async def songs(message: types.Message, state: FSMContext):
     await state.reset_state()
     mus_songs = db.get_songs(str(message.from_user.id))
     if len(mus_songs) == 0:
-        await message.answer("Отправьте песню которую хотите добавить к себе на страницу")
+        await message.answer("Вы ещё не добавили ни одной песни, нажмите кнопку добавить и отправьте первую песню",
+                             reply_markup=s.ADD_SONG_KB)
     elif len(mus_songs) == 1:
         await message.answer_audio(mus_songs[0], protect_content=True)
-        await message.answer("Список ваших песен", reply_markup=InlineKeyboardMarkup(InlineKeyboardButton("Добавить")))
+        await message.answer("Список ваших песен", reply_markup=s.SONGS_KB)
     elif len(mus_songs) > 1:
         media = []
         for i in mus_songs:
             media.append(InputMediaAudio(i))
         await message.answer_media_group(media, protect_content=True)
-        await message.answer("Список ваших песен", reply_markup=InlineKeyboardMarkup(InlineKeyboardButton("Добавить")))
+        await message.answer("Список ваших песен", reply_markup=s.SONGS_KB)
     # await message.answer("⚠️Этот раздел находится в разработке ⚠️")
 
 
-async def songs_save(message: types.Message):
-    '''Реализовать после запуска'''
+async def add_song_button(call: types.CallbackQuery):
     # await message.answer("⚠️Этот раздел находится в разработке ⚠️")
-    db.add_song(str(message.from_user.id), str(message.audio.file_id))
-    await message.answer("Мы сохранили вашу песню !)")
+    db.add_song(str(call.from_user.id), str(call.message.audio.file_id))
+    await call.message.answer("Мы сохранили вашу песню !)")
+
+
+async def delete_song_button(call: types.CallbackQuery):
+    # await message.answer("⚠️Этот раздел находится в разработке ⚠️")
+    db.delete_song(str(call.from_user.id), str(call.message.audio.file_id))
+    song_name = call.message.audio.title
+    await call.message.answer(f"Мы удалили песню {song_name}")
+
+
+async def delete_songs_button(call: types.CallbackQuery):
+    # await message.answer("⚠️Этот раздел находится в разработке ⚠️")
+    db.delete_songs(str(call.from_user.id))
+    await call.message.answer("Мы удалили все ваши песни !")
 
 
 async def whaat(message: types.Message):
@@ -339,7 +352,11 @@ def use_buttons(dp: Dispatcher):
     '''Раздел с песнями'''
     dp.register_message_handler(songs, filters.Text(contains="Песни"),
                                 state="*")
-    dp.register_message_handler(songs_save, content_types=types.ContentTypes.AUDIO,
+    dp.register_message_handler(add_song_button, lambda call: call.data and call.data == 'add_song',
+                                state="*")
+    dp.register_message_handler(delete_song_button, lambda call: call.data and call.data == 'delete_song',
+                                state="*")
+    dp.register_message_handler(delete_songs_button, lambda call: call.data and call.data == 'delete_all_songs',
                                 state="*")
 
     '''Раздел с избранным'''

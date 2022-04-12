@@ -295,6 +295,8 @@ MEM_KB = InlineKeyboardMarkup().row(InlineKeyboardButton(msg.finish, callback_da
 CAN_KB = InlineKeyboardMarkup().row(InlineKeyboardButton(msg.subscription_con, callback_data="cancel_subscription"))
 SUB_KB = InlineKeyboardMarkup().row(InlineKeyboardButton(msg.subscription_ref, callback_data="activate_subscription"))
 
+
+
 FREE_KB = InlineKeyboardMarkup().row(InlineKeyboardButton("😎 Активировать", callback_data="free"))
 
 SUBSC_KB = ReplyKeyboardMarkup(
@@ -363,6 +365,14 @@ CONFIG_KB = InlineKeyboardMarkup().row(
 CONFIG_M_KB = InlineKeyboardMarkup().row(
     InlineKeyboardButton(msg.config_btn_edit, callback_data='edit_config#')
 ).add(InlineKeyboardButton(msg.config_btn_delete, callback_data='delete_config'))
+
+
+ADD_SONG_KB = InlineKeyboardMarkup().row(InlineKeyboardButton(msg.add_song, callback_data="add_song"))
+
+SONGS_KB = InlineKeyboardMarkup().row(
+    InlineKeyboardButton(msg.add_song, callback_data='add_song'),
+    InlineKeyboardButton(msg.delete_song, callback_data='delete_song')
+).add(InlineKeyboardButton(msg.delete_all_songs, callback_data='delete_all_songs'))
 
 
 def genres_kb(active_genres: list, offset: int = 0):

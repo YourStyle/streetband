@@ -218,6 +218,14 @@ class Database:
     def add_song(self, user_id: str, file_id: str):
         self.musicians.update_one({"musician_id": user_id}, {"$push": {"songs": file_id}})
 
+    def delete_song(self, user_id: str, file_id: str):
+        self.musicians.update_one({"musician_id": user_id}, {"$pull": {"songs": file_id}})
+
+    def delete_songs(self, user_id: str):
+        mus_songs = self.get_songs(user_id)
+        for i in mus_songs:
+            self.musicians.update_one({"musician_id": user_id}, {"$pull": {"songs": i}})
+
     def get_songs(self, user_id: str):
         return self.musicians.find_one({"musician_id": user_id})['songs']
 
