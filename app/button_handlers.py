@@ -4,7 +4,7 @@ from aiogram.dispatcher import filters, FSMContext
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, InputFile, InputMediaAudio
 from io import BytesIO
 from gadgets import service as s
-from gadgets.callback_datas import info_callback, add_callback, fav_callback, delete_callback
+from gadgets.callback_datas import info_callback, add_callback, fav_callback, delete_callback, songs_callback
 from gadgets.dialogs import msg
 from gadgets.service import create_group_action_kb
 from gadgets.states import EditingProfile
@@ -331,7 +331,7 @@ async def delete_song_button(call: types.CallbackQuery):
     songs_kb = InlineKeyboardMarkup()
     counter = 0
     for i in all_songs:
-        songs_kb.row(InlineKeyboardButton(i[0], callback_data=f"s_{counter}"))
+        songs_kb.row(InlineKeyboardButton(i[0], callback_data=songs_callback.new(id={i[1]})))
         counter += 1
     await call.message.answer("Список ваших песен", reply_markup=songs_kb)
 
@@ -377,7 +377,7 @@ def use_buttons(dp: Dispatcher):
                                        state="*")
     dp.register_callback_query_handler(delete_song_button, lambda call: call.data and call.data == 'delete_song',
                                        state="*")
-    dp.register_callback_query_handler(remove_song, lambda call: call.data.startswith('s_'),
+    dp.register_callback_query_handler(remove_song, songs_callback.filter(),
                                        state="*")
 
     '''Раздел с избранным'''
