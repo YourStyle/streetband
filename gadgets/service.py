@@ -372,7 +372,7 @@ ADD_SONG_KB = InlineKeyboardMarkup().row(InlineKeyboardButton(msg.add_song, call
 SONGS_KB = InlineKeyboardMarkup().row(
     InlineKeyboardButton(msg.add_song, callback_data='add_song'),
     InlineKeyboardButton(msg.delete_song, callback_data='delete_song')
-).add(InlineKeyboardButton(msg.delete_all_songs, callback_data='delete_all_songs'))
+    ).add(InlineKeyboardButton(msg.delete_all_songs, callback_data='delete_all_songs'))
 
 
 def genres_kb(active_genres: list, offset: int = 0):

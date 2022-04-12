@@ -65,7 +65,7 @@ class Messages():
     subscription_ref: str = "😎 Возобновить подписку"
     delete_song: str = "Удалить песню"
     add_song: str = "Добавить песню"
-    delete_all_songs: str = "Удалить песни"
+    delete_all_songs: str = "Удалить все песни"
 
 
 msg = Messages()

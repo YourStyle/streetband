@@ -327,6 +327,7 @@ async def delete_song_button(call: types.CallbackQuery):
 
 
 async def delete_songs_button(call: types.CallbackQuery):
+    await call.answer()
     # await message.answer("⚠️Этот раздел находится в разработке ⚠️")
     db.delete_songs(str(call.from_user.id))
     await call.message.answer("Мы удалили все ваши песни !")
