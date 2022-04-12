@@ -331,6 +331,7 @@ async def delete_song_button(call: types.CallbackQuery):
     songs_kb = InlineKeyboardMarkup()
     for i in all_songs:
         songs_kb.row(InlineKeyboardButton(i[0], callback_data=f"s_{i[1]}"))
+    await call.message.answer("Список ваших песен", reply_markup=songs_kb)
 
 
 async def remove_song(call: types.CallbackQuery, callback_data: dict):
