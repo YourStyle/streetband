@@ -320,7 +320,7 @@ async def add_song_button(call: types.CallbackQuery):
 
 
 async def save_song(message: types.Message):
-    db.add_song(str(message.from_user.id), str(message.audio.file_id), str(message.audio.title))
+    db.add_song(str(message.from_user.id), str(message.audio.file_id), str(message.audio.file_name))
     await message.answer("Мы сохранили вашу песню !)")
 
 
