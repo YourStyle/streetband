@@ -373,10 +373,11 @@ SONGS_KB = InlineKeyboardMarkup().row(
 
 
 def delete_cancel_kb(song_id):
-    InlineKeyboardMarkup().row(
+    kb = InlineKeyboardMarkup().row(
         InlineKeyboardButton(msg.add_song, callback_data='back_to_songs'),
         InlineKeyboardButton(msg.delete_song, callback_data=f'delete_song_{song_id}')
     )
+    return kb
 
 
 def genres_kb(active_genres: list, offset: int = 0):
