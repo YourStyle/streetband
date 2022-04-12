@@ -234,7 +234,7 @@ async def edit_name(message: types.Message, state: FSMContext):
         await state.reset_state()
         await message.answer(msg.done)
     else:
-        await message.answer("Мы не можете сохранить такие символы, введите что-то другое")
+        await message.answer(msg.bad_chars)
 
 
 
@@ -278,7 +278,7 @@ async def edit_desc(message: types.Message, state: FSMContext):
         await state.reset_state()
         await message.answer(msg.done)
     else:
-        await message.answer("Мы не можете сохранить такие символы, введите что-то другое")
+        await message.answer(msg.bad_chars)
 
 
 async def edit_leader(message: types.Message, state: FSMContext):
@@ -293,7 +293,7 @@ async def edit_leader(message: types.Message, state: FSMContext):
         await state.reset_state()
         await message.answer(msg.done)
     else:
-        await message.answer("Мы не можете сохранить такие символы, введите что-то другое")
+        await message.answer(msg.bad_chars)
 
 
 
