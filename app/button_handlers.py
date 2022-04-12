@@ -89,13 +89,13 @@ async def answer_qr(message: types.Message, state: FSMContext):
     await message.answer_document(bio)
 
 
-async def return_fav(message: types.Message):
+async def return_fav(message: types.Message, state: FSMContext):
+    await state.reset_state()
     fav_kb = InlineKeyboardMarkup()
     fav_groups = db.get_user(str(message.from_user.id))["fav_groups"]
     if cache.jget("musicians") is None:
         db.get_musicians()
     groups = cache.jget("musicians")
-    print(fav_groups)
     if fav_groups:
         for group in fav_groups:
             for info in groups:
