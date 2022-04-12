@@ -7,7 +7,7 @@ from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers import RoundedModuleDrawer
 from qrcode.image.styles.colormasks import VerticalGradiantColorMask
 from gadgets.callback_datas import groups_callback, user_reg_callback, choice_callback, action_callback, \
-    info_callback, add_callback, delete_callback, review_callback, donate_callback
+    info_callback, add_callback, delete_callback, review_callback, donate_callback, songs_callback
 from gadgets.dialogs import msg
 from config import GENRES
 from database import cache, database
@@ -175,6 +175,12 @@ def create_group_action_kb(artist_id, number, fav=False, location=True):
                 ],
                 [
                     InlineKeyboardButton(
+                        text=msg.songs,
+                        callback_data=songs_callback.new(id=artist_id)
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
                         text="Назад",
                         callback_data=groups_callback.new(location="back")
                     )
@@ -199,6 +205,12 @@ def create_group_action_kb(artist_id, number, fav=False, location=True):
                 ],
                 [
                     InlineKeyboardButton(
+                        text=msg.songs,
+                        callback_data=songs_callback.new(id=artist_id)
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
                         text="Назад",
                         callback_data=groups_callback.new(location="back")
                     )
@@ -219,6 +231,12 @@ def create_group_action_kb(artist_id, number, fav=False, location=True):
                     InlineKeyboardButton(
                         text=msg.donate,
                         callback_data=donate_callback.new(id=artist_id)
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        text=msg.songs,
+                        callback_data=songs_callback.new(id=artist_id)
                     )
                 ],
                 [
