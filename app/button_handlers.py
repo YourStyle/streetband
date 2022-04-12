@@ -4,7 +4,8 @@ from aiogram.dispatcher import filters, FSMContext
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, InputFile, InputMediaAudio
 from io import BytesIO
 from gadgets import service as s
-from gadgets.callback_datas import info_callback, add_callback, fav_callback, delete_callback, songs_callback
+from gadgets.callback_datas import info_callback, add_callback, fav_callback, delete_callback, songs_callback, \
+    user_songs_callback
 from gadgets.dialogs import msg
 from gadgets.service import create_group_action_kb
 from gadgets.states import EditingProfile
@@ -134,6 +135,15 @@ async def fav_group_info(call: CallbackQuery, callback_data: dict):
     await call.message.answer_photo(group_picture, caption, protect_content=True,
                                     reply_markup=create_group_action_kb(group_id, callback_data["id"], fav=True,
                                                                         location=False))
+
+
+async def show_songs(call: CallbackQuery, callback_data: dict):
+    await call.answer()
+    all_songs = db.get_songs(callback_data["id"])
+    media = []
+    for i in all_songs:
+        media.append(InputMediaAudio(i[1]))
+    await call.message.answer_media_group(media, protect_content=True)
 
 
 async def delete_from_fav(call: CallbackQuery, callback_data: dict):
@@ -357,6 +367,7 @@ async def delete_songs_button(call: types.CallbackQuery):
     db.delete_songs(str(call.from_user.id))
     await call.message.answer("Мы удалили все ваши песни !")
 
+
 #
 # async def whaat(message: types.Message):
 #     await message.answer("Лох")
@@ -391,6 +402,8 @@ def use_buttons(dp: Dispatcher):
     dp.register_callback_query_handler(delete_song_button, lambda call: call.data and call.data == 'back_to_songs',
                                        state="*")
     dp.register_callback_query_handler(delet_fin, lambda call: call.data.startswith('delete_song_'),
+                                       state="*")
+    dp.register_callback_query_handler(show_songs, user_songs_callback.filter(),
                                        state="*")
 
     '''Раздел с избранным'''
