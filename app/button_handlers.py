@@ -17,8 +17,7 @@ async def open_profile(message: types.Message):
     await message.answer(text="Вы открыли ваш личный кабинет", reply_markup=s.MAIN_KB)
 
 
-async def group_info(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    await state.reset_state()
+async def group_info(call: CallbackQuery, callback_data: dict):
     await call.answer()
     groups = cache.jget("musicians")
     group = groups[int(callback_data["db_number"])]
@@ -317,6 +316,7 @@ def use_buttons(dp: Dispatcher):
     dp.register_message_handler(edit_group, filters.Text(contains="Профиль"), state="*")
     dp.register_message_handler(songs, filters.Text(contains="Песни"), state="*")
     dp.register_callback_query_handler(group_info, info_callback.filter(), state="*")
+
     '''Раздел с избранным'''
     dp.register_callback_query_handler(add_to_favourite, add_callback.filter(), state="*")
     dp.register_callback_query_handler(delete_from_fav, delete_callback.filter(), state="*")
