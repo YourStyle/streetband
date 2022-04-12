@@ -215,8 +215,11 @@ class Database:
         self.musicians.update_one({"musician_id": musician_id},
                                   {"$set": {"subscription": datetime.datetime.now() + datetime.timedelta(days=31), "active_subscription": True}})
 
-    def add_song(self, user_id: str):
-        pass
+    def add_song(self, user_id: str, file_id):
+        self.musicians.update_one({"musician_id": user_id}, {"$push": {"songs": file_id}})
+
+    def get_songs(self, user_id: str):
+        return self.musicians.find_one({"musician_id": user_id})['songs']
 
     def delete_genres(self, user_id: str):
         c_genres = self.users.find_one({"user_id": user_id})["fav_genres"]

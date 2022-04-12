@@ -304,7 +304,14 @@ async def songs(message: types.Message, state: FSMContext):
 async def songs_save(message: types.Message):
     '''Реализовать после запуска'''
     # await message.answer("⚠️Этот раздел находится в разработке ⚠️")
-    await message.answer(message)
+    db.add_song(message.from_user.id, message.audio.file_id)
+    songs = db.get_songs(message.from_user.id)
+    if len(songs) == 1:
+        await message.answer("Список ваших песен:")
+        await message.answer_audio(songs[0], protect_content=True)
+    elif len(songs) > 1:
+        await message.answer("Список ваших песен:")
+        await message.answer_media_group(songs, protect_content=True)
 
 
 async def whaat(message: types.Message):
