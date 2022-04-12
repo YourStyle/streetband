@@ -132,7 +132,7 @@ async def fav_group_info(call: CallbackQuery, callback_data: dict):
     group_leader = group["group_leader"]
     caption = f"Название: {group_name} \nЛидер группы: {group_leader}\nЖанр: {genres}\nОписание :{group_description}"
 
-    await call.message.answer_photo(group_picture, caption,
+    await call.message.answer_photo(group_picture, caption, protect_content=True,
                                     reply_markup=create_group_action_kb(group_id, callback_data["id"], fav=True,
                                                                         location=False))
 
@@ -237,7 +237,6 @@ async def edit_name(message: types.Message, state: FSMContext):
         await message.answer(msg.bad_chars)
 
 
-
 async def edit_pic(message: types.Message, state: FSMContext):
     if message.document:
 
@@ -294,7 +293,6 @@ async def edit_leader(message: types.Message, state: FSMContext):
         await message.answer(msg.done)
     else:
         await message.answer(msg.bad_chars)
-
 
 
 async def songs(message: types.Message, state: FSMContext):
