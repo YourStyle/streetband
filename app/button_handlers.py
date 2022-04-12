@@ -340,7 +340,23 @@ async def remove_song(call: types.CallbackQuery, callback_data: dict):
     await call.answer()
     song_id = callback_data["id"]
     all_songs = db.get_songs(str(call.from_user.id))
-    await call.message.answer_audio(all_songs[int(song_id)][1])
+    await call.message.answer_audio(all_songs[int(song_id)][1], reply_markup=s.delete_cancel_kb(song_id))
+
+
+# async def back_to_songs(call: types.CallbackQuery):
+#     await call.answer()
+#     # await message.answer("⚠️Этот раздел находится в разработке ⚠️")
+#     all_songs = db.get_songs(str(call.from_user.id))
+#     songs_kb = InlineKeyboardMarkup()
+#     counter = 0
+#     for i in all_songs:
+#         songs_kb.row(InlineKeyboardButton(i[0], callback_data=songs_callback.new(id=counter)))
+#         counter += 1
+#     await call.message.answer("Список ваших песен", reply_markup=songs_kb)
+
+
+async def delet_fin(call: types.CallbackQuery):
+    await call.message.answer(call.data)
 
 
 async def delete_songs_button(call: types.CallbackQuery):
@@ -376,10 +392,15 @@ def use_buttons(dp: Dispatcher):
                                 state="*")
     dp.register_callback_query_handler(delete_song_button, lambda call: call.data and call.data == 'delete_song',
                                        state="*")
-    dp.register_callback_query_handler(delete_song_button, lambda call: call.data and call.data == 'delete_song',
+    dp.register_callback_query_handler(delete_songs_button, lambda call: call.data and call.data == 'delete_all_songs',
                                        state="*")
     dp.register_callback_query_handler(remove_song, songs_callback.filter(),
                                        state="*")
+    dp.register_callback_query_handler(delete_song_button, lambda call: call.data and call.data == 'back_to_songs',
+                                       state="*")
+    dp.register_callback_query_handler(delet_fin, lambda call: call.data.startswith('delete_song_'),
+                                       state="*")
+
 
     '''Раздел с избранным'''
     dp.register_callback_query_handler(add_to_favourite, add_callback.filter(), state="*")

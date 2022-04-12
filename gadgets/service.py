@@ -295,8 +295,6 @@ MEM_KB = InlineKeyboardMarkup().row(InlineKeyboardButton(msg.finish, callback_da
 CAN_KB = InlineKeyboardMarkup().row(InlineKeyboardButton(msg.subscription_con, callback_data="cancel_subscription"))
 SUB_KB = InlineKeyboardMarkup().row(InlineKeyboardButton(msg.subscription_ref, callback_data="activate_subscription"))
 
-
-
 FREE_KB = InlineKeyboardMarkup().row(InlineKeyboardButton("😎 Активировать", callback_data="free"))
 
 SUBSC_KB = ReplyKeyboardMarkup(
@@ -329,7 +327,7 @@ MUSICIAN_LC_KB = ReplyKeyboardMarkup(
 )
 
 
-async def get_genre_ids(user_id: str, musician:bool) -> list:
+async def get_genre_ids(user_id: str, musician: bool) -> list:
     """Функция получает id жанров пользователя в базе данных"""
     genres = cache.lrange(f"{user_id}", 0, -1)
     if not musician:
@@ -366,13 +364,19 @@ CONFIG_M_KB = InlineKeyboardMarkup().row(
     InlineKeyboardButton(msg.config_btn_edit, callback_data='edit_config#')
 ).add(InlineKeyboardButton(msg.config_btn_delete, callback_data='delete_config'))
 
-
 ADD_SONG_KB = InlineKeyboardMarkup().row(InlineKeyboardButton(msg.add_song, callback_data="add_song"))
 
 SONGS_KB = InlineKeyboardMarkup().row(
     InlineKeyboardButton(msg.add_song, callback_data='add_song'),
     InlineKeyboardButton(msg.delete_song, callback_data='delete_song')
-    ).add(InlineKeyboardButton(msg.delete_all_songs, callback_data='delete_all_songs'))
+).add(InlineKeyboardButton(msg.delete_all_songs, callback_data='delete_all_songs'))
+
+
+def delete_cancel_kb(song_id):
+    InlineKeyboardMarkup().row(
+        InlineKeyboardButton(msg.add_song, callback_data='back_to_songs'),
+        InlineKeyboardButton(msg.delete_song, callback_data=f'delete_song_{song_id}')
+    )
 
 
 def genres_kb(active_genres: list, offset: int = 0):
