@@ -1,7 +1,7 @@
 import asyncio
 from aiogram import Dispatcher, types
 from aiogram.dispatcher import filters, FSMContext
-from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, InputFile
+from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, InputFile, InputMediaAudio
 from io import BytesIO
 from gadgets import service as s
 from gadgets.callback_datas import info_callback, add_callback, fav_callback, delete_callback
@@ -304,7 +304,10 @@ async def songs(message: types.Message, state: FSMContext):
         await message.answer_audio(mus_songs[0], protect_content=True)
         await message.answer("Список ваших песен", reply_markup=InlineKeyboardMarkup(InlineKeyboardButton("Добавить")))
     elif len(mus_songs) > 1:
-        await message.answer_media_group(mus_songs, protect_content=True)
+        media = []
+        for i in mus_songs:
+            media.append(InputMediaAudio(i))
+        await message.answer_media_group(media, protect_content=True)
         await message.answer("Список ваших песен", reply_markup=InlineKeyboardMarkup(InlineKeyboardButton("Добавить")))
     # await message.answer("⚠️Этот раздел находится в разработке ⚠️")
 
