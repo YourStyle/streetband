@@ -215,8 +215,8 @@ class Database:
         self.musicians.update_one({"musician_id": musician_id},
                                   {"$set": {"subscription": datetime.datetime.now() + datetime.timedelta(days=31), "active_subscription": True}})
 
-    def add_song(self, user_id: str, file_id: str):
-        self.musicians.update_one({"musician_id": user_id}, {"$push": {"songs": file_id}})
+    def add_song(self, user_id: str, file_id: str, title: str):
+        self.musicians.update_one({"musician_id": user_id}, {"$push": {"songs": [title, file_id]}})
 
     def delete_song(self, user_id: str, file_id: str):
         self.musicians.update_one({"musician_id": user_id}, {"$pull": {"songs": file_id}})

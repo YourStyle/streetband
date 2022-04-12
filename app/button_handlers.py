@@ -302,12 +302,12 @@ async def songs(message: types.Message, state: FSMContext):
         await message.answer("Вы ещё не добавили ни одной песни, нажмите кнопку добавить и отправьте первую песню",
                              reply_markup=s.ADD_SONG_KB)
     elif len(mus_songs) == 1:
-        await message.answer_audio(mus_songs[0], protect_content=True)
+        await message.answer_audio(mus_songs[0][1], protect_content=True)
         await message.answer("Список ваших песен", reply_markup=s.SONGS_KB)
     elif len(mus_songs) > 1:
         media = []
         for i in mus_songs:
-            media.append(InputMediaAudio(i))
+            media.append(InputMediaAudio(i[1]))
         await message.answer_media_group(media, protect_content=True)
         await message.answer("Список ваших песен", reply_markup=s.SONGS_KB)
     # await message.answer("⚠️Этот раздел находится в разработке ⚠️")
@@ -320,16 +320,22 @@ async def add_song_button(call: types.CallbackQuery):
 
 
 async def save_song(message: types.Message):
-    db.add_song(str(message.from_user.id), str(message.audio.file_id))
+    db.add_song(str(message.from_user.id), str(message.audio.file_id), str(message.audio.title))
     await message.answer("Мы сохранили вашу песню !)")
 
 
 async def delete_song_button(call: types.CallbackQuery):
     await call.answer()
     # await message.answer("⚠️Этот раздел находится в разработке ⚠️")
-    db.delete_song(str(call.from_user.id), str(call.message.audio.file_id))
-    song_name = call.message.audio.title
-    await call.message.answer(f"Мы удалили песню {song_name}")
+    all_songs = db.get_songs(str(call.from_user.id))
+    songs_kb = InlineKeyboardMarkup()
+    for i in all_songs:
+        songs_kb.row(InlineKeyboardButton(i[0], callback_data=f"s_{i[1]}"))
+
+
+async def remove_song(call: types.CallbackQuery, callback_data: dict):
+    # song_id = callback_data.
+    await call.message.answer(callback_data)
 
 
 async def delete_songs_button(call: types.CallbackQuery):
@@ -365,7 +371,9 @@ def use_buttons(dp: Dispatcher):
                                 state="*")
     dp.register_callback_query_handler(delete_song_button, lambda call: call.data and call.data == 'delete_song',
                                        state="*")
-    dp.register_callback_query_handler(delete_songs_button, lambda call: call.data and call.data == 'delete_all_songs',
+    dp.register_callback_query_handler(delete_song_button, lambda call: call.data and call.data == 'delete_song',
+                                       state="*")
+    dp.register_callback_query_handler(remove_song, lambda call: call.data and call.data.startswith('s_'),
                                        state="*")
 
     '''Раздел с избранным'''
