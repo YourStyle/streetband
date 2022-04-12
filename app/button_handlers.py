@@ -314,12 +314,18 @@ async def songs(message: types.Message, state: FSMContext):
 
 
 async def add_song_button(call: types.CallbackQuery):
+    await call.answer()
+    await call.message.answer("Отправьте песню, которую вы хотите добавить")
     # await message.answer("⚠️Этот раздел находится в разработке ⚠️")
-    db.add_song(str(call.from_user.id), str(call.message.audio.file_id))
-    await call.message.answer("Мы сохранили вашу песню !)")
+
+
+async def save_song(message: types.Message):
+    db.add_song(str(message.from_user.id), str(message.audio.file_id))
+    await message.answer("Мы сохранили вашу песню !)")
 
 
 async def delete_song_button(call: types.CallbackQuery):
+    await call.answer()
     # await message.answer("⚠️Этот раздел находится в разработке ⚠️")
     db.delete_song(str(call.from_user.id), str(call.message.audio.file_id))
     song_name = call.message.audio.title
@@ -355,6 +361,8 @@ def use_buttons(dp: Dispatcher):
                                 state="*")
     dp.register_callback_query_handler(add_song_button, lambda call: call.data and call.data == 'add_song',
                                        state="*")
+    dp.register_message_handler(save_song, content_types=types.ContentTypes.AUDIO,
+                                state="*")
     dp.register_callback_query_handler(delete_song_button, lambda call: call.data and call.data == 'delete_song',
                                        state="*")
     dp.register_callback_query_handler(delete_songs_button, lambda call: call.data and call.data == 'delete_all_songs',
