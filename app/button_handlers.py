@@ -337,9 +337,10 @@ async def delete_song_button(call: types.CallbackQuery):
 
 
 async def remove_song(call: types.CallbackQuery, callback_data: dict):
+    await call.answer()
     song_id = callback_data["id"]
     all_songs = db.get_songs(str(call.from_user.id))
-    await call.message.answer(all_songs[int(song_id)])
+    await call.message.answer_audio(all_songs[int(song_id)][1])
 
 
 async def delete_songs_button(call: types.CallbackQuery):
