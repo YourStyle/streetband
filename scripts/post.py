@@ -65,7 +65,7 @@ async def send_mailing_test():
     # print(arr)
     for user_id in arr_user:
         try:
-            if db.check_mail_status():
+            if db.check_mail_status(user_id):
                 await bot.send_message(chat_id=user_id["user_id"],
                                        text="Если вы больше не хотите получать уведомления, нажмите на кнопку ниже",
                                        reply_markup=cancel_mailing_kb(user_id))
@@ -77,7 +77,7 @@ async def send_mailing_test():
 
 async def scheduler():
     # print("test")
-    aioschedule.every().day.at("15:35").do(send_mailing_test)
+    aioschedule.every().day.at("18:35").do(send_mailing_test)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
