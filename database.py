@@ -248,6 +248,9 @@ class Database:
         if self.musician_exists(user_id):
             self.musicians.delete_one({"musician_id": user_id})
 
+    def set_mailing_status(self, user_id: str):
+        return self.users.update_one({"user_id": user_id}, {"$set": {"sub_mailing": True}})
+
     def check_mail_status(self, user_id: str):
         return self.users.find_one({"user_id": user_id})["sub_mailing"]
 
