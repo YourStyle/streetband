@@ -70,14 +70,14 @@ async def send_mailing_test():
                                        text="Если вы больше не хотите получать уведомления, нажмите на кнопку ниже",
                                        reply_markup=cancel_mailing_kb(user_id))
             else:
-                pass
+                db.stop_mailing(user_id)
         except BotBlocked:
             await asyncio.sleep(1)
 
 
 async def scheduler():
     # print("test")
-    aioschedule.every().day.at("18:50").do(send_mailing_test)
+    aioschedule.every().day.at("18:55").do(send_mailing_test)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
