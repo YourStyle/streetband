@@ -213,7 +213,8 @@ class Database:
 
     def activate_subscription(self, musician_id: str):
         self.musicians.update_one({"musician_id": musician_id},
-                                  {"$set": {"subscription": datetime.datetime.now() + datetime.timedelta(days=31), "active_subscription": True}})
+                                  {"$set": {"subscription": datetime.datetime.now() + datetime.timedelta(days=31),
+                                            "active_subscription": True}})
 
     def add_song(self, user_id: str, file_id: str, title: str):
         self.musicians.update_one({"musician_id": user_id}, {"$push": {"songs": [title, file_id]}})
@@ -246,6 +247,12 @@ class Database:
     def delete_musician(self, user_id: str):
         if self.musician_exists(user_id):
             self.musicians.delete_one({"musician_id": user_id})
+
+    def check_mail_status(self, user_id: str):
+        return self.users.find_one({"user_id": user_id})["sub_mailing"]
+
+    def stop_mailing(self, user_id: str):
+        self.users.update_one({"user_id": user_id}, {"$push": {"sub_mailing": False}})
 
 
 cache = Cache(

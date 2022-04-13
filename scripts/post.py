@@ -62,19 +62,22 @@ async def send_mailing_test():
                 await asyncio.sleep(1)
     db.get_users()
     arr_user = cache.jget("users_data")
-    print(arr)
+    # print(arr)
     for user_id in arr_user:
         try:
-            await bot.send_message(chat_id=user_id["user_id"],
-                                   text="Если вы больше не хотите получать уведомления, нажмите на кнопку ниже",
-                                   reply_markup=cancel_mailing_kb(user_id))
+            if db.check_mail_status():
+                await bot.send_message(chat_id=user_id["user_id"],
+                                       text="Если вы больше не хотите получать уведомления, нажмите на кнопку ниже",
+                                       reply_markup=cancel_mailing_kb(user_id))
+            else:
+                pass
         except BotBlocked:
             await asyncio.sleep(1)
 
 
 async def scheduler():
     # print("test")
-    aioschedule.every().day.at("15:35").do(mailing)
+    aioschedule.every().day.at("15:35").do(send_mailing_test)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)

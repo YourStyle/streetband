@@ -5,7 +5,7 @@ from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardBut
 from io import BytesIO
 from gadgets import service as s
 from gadgets.callback_datas import info_callback, add_callback, fav_callback, delete_callback, songs_callback, \
-    user_songs_callback
+    user_songs_callback, cancel_mail_callback
 from gadgets.dialogs import msg
 from gadgets.service import create_group_action_kb
 from gadgets.states import EditingProfile
@@ -368,6 +368,10 @@ async def delete_songs_button(call: types.CallbackQuery):
     await call.message.answer("Мы удалили все ваши песни !")
 
 
+async def cancel_mail_test(call: types.CallbackQuery, callback_data: dict):
+    await call.answer()
+    db.stop_mailing(str(callback_data))
+    await call.message.answer("Вы больше не будет получать рассылку !")
 #
 # async def whaat(message: types.Message):
 #     await message.answer("Лох")
@@ -432,6 +436,7 @@ def use_buttons(dp: Dispatcher):
     # dp.register_message_handler(edit_genres, state=EditingProfile.EditingGenres)
 
     dp.register_callback_query_handler(fav_group_info, fav_callback.filter(), state="*")
+    dp.register_callback_query_handler(cancel_mail_test, cancel_mail_callback.filter(), state="*")
 
     '''Тестовый хендлер'''
     # dp.register_message_handler(whaat_mus, is_musician=True, content_types=types.ContentTypes.LOCATION, state="*")
