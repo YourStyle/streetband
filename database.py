@@ -53,7 +53,7 @@ class Database:
     def add_user(self, user_id: str, name=None, language="ru"):
         if not self.user_exists(user_id):
             n_user = {"user_id": user_id, "musician": False, "fav_genres": [], "fav_groups": [], "city": None,
-                      "pending": {}}
+                      "pending": {}, "sub_mailing": True}
             self.users.insert_one(n_user)
 
     def add_musician(self, user_id: str):

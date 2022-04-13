@@ -10,10 +10,11 @@ import config
 from app.paymnet_handler import Item
 from database import database as db, cache
 from gadgets import service as s
+from gadgets.service import cancel_mailing_kb
 from gadgets.states import Subscribing
 
 
-async def noon_print():
+async def send_mailing_test():
     bot = Bot(token=config.TOKEN, parse_mode="HTML")
     db.get_musicians()
     arr = cache.jget("musicians")
@@ -65,14 +66,15 @@ async def noon_print():
     for user_id in arr_user:
         try:
             await bot.send_message(chat_id=user_id["user_id"],
-                                   text="Извиняемся за технические проблемы :) Обращайтесь по следующему адресу mos.ru")
+                                   text="Если вы больше не хотите получать уведомления, нажмите на кнопку ниже",
+                                   reply_markup=cancel_mailing_kb(user_id))
         except BotBlocked:
             await asyncio.sleep(1)
 
 
 async def scheduler():
     # print("test")
-    aioschedule.every().day.at("15:35").do(noon_print)
+    aioschedule.every().day.at("15:35").do(mailing)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)

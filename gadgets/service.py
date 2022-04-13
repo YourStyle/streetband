@@ -7,7 +7,8 @@ from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers import RoundedModuleDrawer
 from qrcode.image.styles.colormasks import VerticalGradiantColorMask
 from gadgets.callback_datas import groups_callback, user_reg_callback, choice_callback, action_callback, \
-    info_callback, add_callback, delete_callback, review_callback, donate_callback, songs_callback, user_songs_callback
+    info_callback, add_callback, delete_callback, review_callback, donate_callback, songs_callback, user_songs_callback, \
+    cancel_mail_callback
 from gadgets.dialogs import msg
 from config import GENRES
 from database import cache, database
@@ -458,4 +459,9 @@ def review_kb():
     buf = []
     for i in range(1, 6):
         kb.insert(InlineKeyboardButton(f"⭐️{i}", callback_data=review_callback.new(score=str(i))))
+    return kb
+
+def cancel_mailing_kb(user_id):
+    kb = InlineKeyboardMarkup().row(
+        InlineKeyboardButton(msg.btn_back, callback_data=cancel_mail_callback.new(user_id)))
     return kb
