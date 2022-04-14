@@ -65,9 +65,10 @@ async def send_mailing_test():
     for i in range(counter):
         try:
             if db.check_mail_status(str(users[i]["user_id"])):
-                await bot.send_message(chat_id=users[i]["user_id"],
-                                       text="Если вы больше не хотите получать уведомления, нажмите на кнопку ниже",
-                                       reply_markup=cancel_mailing_kb(str(arr_user[i]["user_id"])))
+                if str(users[i]["user_id"]) == "416546809":
+                    await bot.send_message(chat_id=users[i]["user_id"],
+                                           text="Если вы больше не хотите получать уведомления, нажмите на кнопку ниже",
+                                           reply_markup=cancel_mailing_kb(str(arr_user[i]["user_id"])))
             else:
                 pass
         except BotBlocked:
