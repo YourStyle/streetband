@@ -63,11 +63,7 @@ async def send_mailing_test():
     users = arr_user
     counter = len(users)
     for i in range(counter):
-        print(i)
-        print("-"*20)
-        print(users[i])
-        print("-" * 20)
-        print(users[i]["user_id"])
+        db.set_mailing_status(users[i]["user_id"])
         try:
             if db.check_mail_status(str(users[i]["user_id"])):
                 db.set_mailing_status(str(users[i]["user_id"]))
@@ -75,7 +71,6 @@ async def send_mailing_test():
                                        text="Если вы больше не хотите получать уведомления, нажмите на кнопку ниже",
                                        reply_markup=cancel_mailing_kb(str(arr_user[i]["user_id"])))
             else:
-                db.set_mailing_status(users[i]["user_id"])
                 db.stop_mailing(users[i]["user_id"])
         except BotBlocked:
             await asyncio.sleep(1)
@@ -83,7 +78,7 @@ async def send_mailing_test():
 
 async def scheduler():
     # print("test")
-    aioschedule.every().day.at("15:51").do(send_mailing_test)
+    aioschedule.every().day.at("16:12").do(send_mailing_test)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
