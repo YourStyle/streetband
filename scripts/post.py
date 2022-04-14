@@ -61,6 +61,7 @@ async def send_mailing_test():
     db.get_users()
     arr_user = cache.jget("users_data")
     users = arr_user
+    print("Ok")
     counter = len(users)
     for i in range(counter):
         db.set_mailing_status(users[i]["user_id"])
