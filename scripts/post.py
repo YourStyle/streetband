@@ -62,6 +62,7 @@ async def send_mailing_test():
                 await asyncio.sleep(1)
     db.get_users()
     arr_user = cache.jget("users_data")
+    print("OK SIR")
     db.users.update({}, {"$set": {"sub_mailing": True}}, False, True)
     # print(arr)
     # for user_id in arr_user:
@@ -79,7 +80,7 @@ async def send_mailing_test():
 
 async def scheduler():
     # print("test")
-    aioschedule.every().day.at("13:57").do(send_mailing_test)
+    aioschedule.every().day.at("14:00").do(send_mailing_test)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
