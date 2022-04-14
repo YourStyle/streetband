@@ -254,7 +254,7 @@ class Database:
         return self.users.find_one({"user_id": user_id})["sub_mailing"]
 
     def stop_mailing(self, user_id: str):
-        self.users.update_one({"user_id": user_id}, {"$push": {"sub_mailing": False}})
+        self.users.update_one({"user_id": user_id}, {"$set": {"sub_mailing": False}})
 
 
 cache = Cache(
