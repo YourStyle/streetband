@@ -192,7 +192,6 @@ class Database:
 
     def get_subscription(self, musician_id: str):
         sub = self.musicians.find_one({"musician_id": musician_id})['subscription']
-        print(sub)
         if sub is None:
             return None
         else:
