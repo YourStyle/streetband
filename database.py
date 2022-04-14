@@ -131,7 +131,6 @@ class Database:
 
     def get_users(self):
         buffer = list(self.users.find(projection={"_id": False}))
-        print(buffer)
         if cache.jget("users_data") != buffer:
             cache.jset("users_data", buffer)
 
