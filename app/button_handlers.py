@@ -370,7 +370,6 @@ async def delete_songs_button(call: types.CallbackQuery):
 
 async def cancel_mail_test(call: types.CallbackQuery, callback_data: dict):
     await call.answer()
-    await call.message.answer(str(callback_data))
     db.stop_mailing(str(callback_data["id"]))
     await call.message.answer("Вы больше не будет получать рассылку !")
 #
