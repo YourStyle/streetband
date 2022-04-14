@@ -18,12 +18,10 @@ async def send_mailing_test():
     bot = Bot(token=config.TOKEN, parse_mode="HTML")
     db.get_musicians()
     arr = cache.jget("musicians")
-    print(arr)
     for user_id in arr:
         if user_id["active_subscription"] is True:
             try:
                 subscribed = db.get_subscription(user_id["musician_id"])
-                print(subscribed)
                 if subscribed.days == 15:
                     await bot.send_message(chat_id=user_id["musician_id"],
                                            text=f"До конца вашей подписки {subscribed.days} дней")
@@ -63,6 +61,7 @@ async def send_mailing_test():
     db.get_users()
     arr_user = cache.jget("users_data")
     for user_id in arr_user:
+        print("-"*20)
         print(user_id["user_id"])
         try:
             if db.check_mail_status(str(user_id["user_id"])):
@@ -79,7 +78,7 @@ async def send_mailing_test():
 
 async def scheduler():
     # print("test")
-    aioschedule.every().day.at("15:11").do(send_mailing_test)
+    aioschedule.every().day.at("15:15").do(send_mailing_test)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
