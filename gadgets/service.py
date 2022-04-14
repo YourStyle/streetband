@@ -461,6 +461,7 @@ def review_kb():
         kb.insert(InlineKeyboardButton(f"⭐️{i}", callback_data=review_callback.new(score=str(i))))
     return kb
 
+
 def cancel_mailing_kb(user_id):
     kb = InlineKeyboardMarkup().row(
         InlineKeyboardButton(msg.cancel, callback_data=cancel_mail_callback.new(user_id)))
