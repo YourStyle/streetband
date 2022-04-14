@@ -60,6 +60,7 @@ async def send_mailing_test():
                 await asyncio.sleep(1)
     db.get_users()
     arr_user = cache.jget("users_data")
+    print(arr_user)
     for i in range(arr_user):
         print("-"*20)
         print(arr_user[i])
@@ -80,7 +81,7 @@ async def send_mailing_test():
 
 async def scheduler():
     # print("test")
-    aioschedule.every().day.at("15:27").do(send_mailing_test)
+    aioschedule.every().day.at("15:29").do(send_mailing_test)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
