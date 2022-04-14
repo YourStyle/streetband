@@ -61,18 +61,15 @@ async def send_mailing_test():
     db.get_users()
     arr_user = cache.jget("users_data")
     users = arr_user
-    print("Ok")
     counter = len(users)
     for i in range(counter):
-        db.set_mailing_status(users[i]["user_id"])
         try:
             if db.check_mail_status(str(users[i]["user_id"])):
-                db.set_mailing_status(str(users[i]["user_id"]))
                 await bot.send_message(chat_id=users[i]["user_id"],
                                        text="Если вы больше не хотите получать уведомления, нажмите на кнопку ниже",
                                        reply_markup=cancel_mailing_kb(str(arr_user[i]["user_id"])))
             else:
-                db.stop_mailing(users[i]["user_id"])
+                pass
         except BotBlocked:
             await asyncio.sleep(1)
 

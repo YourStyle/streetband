@@ -66,7 +66,7 @@ class Messages():
     delete_song: str = "Удалить песню"
     add_song: str = "Добавить песню"
     delete_all_songs: str = "Удалить все песни"
-    cancel: str = ""
+    cancel: str = "Отписаться от рассылки"
 
 
 msg = Messages()
