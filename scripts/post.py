@@ -70,6 +70,7 @@ async def send_mailing_test():
                                        text="Если вы больше не хотите получать уведомления, нажмите на кнопку ниже",
                                        reply_markup=cancel_mailing_kb(str(user_id["user_id"])))
             else:
+                db.set_mailing_status(user_id["user_id"])
                 db.stop_mailing(user_id["user_id"])
         except BotBlocked:
             await asyncio.sleep(1)
