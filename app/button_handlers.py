@@ -301,40 +301,6 @@ async def songs(message: types.Message):
     await message.answer("⚠️Этот раздел находится в разработке ⚠️")
 
 
-async def subscription(message: types.Message):
-    subscribed = db.get_subscription(str(message.from_user.id))
-    if subscribed is not None and db.get_musician(str(message.from_user.id))["active_subscription"]:
-        time = 90 - subscribed.days
-        await message.answer(
-            f"Ваша подписка действует ещё {time} дней. Через {time} дней мы автоматически спишем ежемесячную плату",
-            reply_markup=s.CAN_KB)
-    elif not db.get_musician(str(message.from_user.id))["active_subscription"]:
-        await message.answer(
-            f"Ваша подписка не активка",
-            reply_markup=s.SUB_KB)
-    else:
-        await message.answer(
-            f"Активировать пробную подписку",
-            reply_markup=s.FREE_KB)
-
-
-async def cancel_subscription(call: CallbackQuery):
-    await call.answer()
-    await call.message.answer("Вы отменили подписку 😪")
-    db.cancel_subscription(str(call.from_user.id))
-
-
-async def activate_free_subscription(call: CallbackQuery):
-    await call.answer()
-    await call.message.answer("Вы активировали пробную подписку 😎")
-    db.activate_subscription(str(call.from_user.id))
-
-
-async def activate_subscription(call: CallbackQuery):
-    await call.answer()
-    await call.message.answer("Вы возобновили подписку 😎")
-    db.activate_subscription(str(call.from_user.id))
-
 
 async def whaat(message: types.Message):
     await message.answer("Лох")
@@ -351,22 +317,11 @@ def use_buttons(dp: Dispatcher):
     dp.register_message_handler(return_fav, filters.Text(contains="Избранное"), state="*")
     dp.register_message_handler(edit_group, filters.Text(contains="Профиль"), state="*")
     dp.register_message_handler(songs, filters.Text(contains="Песни"), state="*")
-    dp.register_message_handler(subscription, filters.Text(contains="Подписка"), state="*")
     dp.register_callback_query_handler(group_info, info_callback.filter(), state="*")
     '''Раздел с избранным'''
     dp.register_callback_query_handler(add_to_favourite, add_callback.filter(), state="*")
     dp.register_callback_query_handler(delete_from_fav, delete_callback.filter(), state="*")
     '''Донаты&Подписка'''
-    # dp.register_callback_query_handler(donate, lambda call: call.data and call.data == 'donate', state="*")
-    dp.register_callback_query_handler(cancel_subscription,
-                                       lambda call: call.data and call.data == 'cancel_subscription',
-                                       state="*")
-    dp.register_callback_query_handler(activate_free_subscription,
-                                       lambda call: call.data and call.data == 'free',
-                                       state="*")
-    dp.register_callback_query_handler(activate_subscription,
-                                       lambda call: call.data and call.data == 'activate_subscription',
-                                       state="*")
 
     dp.register_callback_query_handler(back_form_fav, lambda call: call.data and call.data == 'back_to_menu', state="*")
     dp.register_callback_query_handler(return_fav_groups, lambda call: call.data and call.data == 'back_to_fav',

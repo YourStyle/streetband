@@ -13,6 +13,8 @@ from app.registration_handlers import register_users
 from app.start_handlers import start_bot
 from app.streets_handlers import check_streets
 from app.paymnet_handler import pay_bot
+from app.subscription_handler import subscribe_user
+# from app.utils import check_subscription
 
 logger = logging.getLogger(__name__)
 
@@ -26,10 +28,10 @@ def register_all_handlers(dp):
     pay_bot(dp)
     register_users(dp)
     choose_genres(dp)
+    subscribe_user(dp)
     use_buttons(dp)
     check_streets(dp)
     send_feedback(dp)
-
 
 
 async def set_bot_commands(bot: Bot):

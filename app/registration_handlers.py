@@ -170,7 +170,6 @@ async def register_musician_final(call: CallbackQuery, state: FSMContext):
     db.set_group_leader(muser_id, str(current_info['group_leader']))
     db.set_group_genre(muser_id, current_info['group_genres'].capitalize().split(','))
     db.set_group_current_location(muser_id, None)
-    db.free_subscription(muser_id)
     db.get_musicians()
     await call.answer()
     await call.bot.send_message(chat_id=call.from_user.id,

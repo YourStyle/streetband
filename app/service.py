@@ -279,6 +279,16 @@ SUB_KB = InlineKeyboardMarkup().row(InlineKeyboardButton(msg.subscription_ref, c
 
 FREE_KB = InlineKeyboardMarkup().row(InlineKeyboardButton("😎 Активировать", callback_data="free"))
 
+SUBSC_KB = ReplyKeyboardMarkup(
+    resize_keyboard=True,
+    row_width=2,
+    keyboard=[
+        [
+            KeyboardButton(msg.subscription)
+        ]
+    ]
+)
+
 # Профиль музыканта
 MUSICIAN_LC_KB = ReplyKeyboardMarkup(
     resize_keyboard=True,

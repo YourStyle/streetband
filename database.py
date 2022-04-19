@@ -33,20 +33,24 @@ class Database:
 
     def __init__(self, name):
         self.name = name
-        self.client = pymongo.MongoClient()
-        # self.client = pymongo.MongoClient("localhost", username='Admin', password='PasswordForMongo63',
-        #                                   authSource='admin', authMechanism='SCRAM-SHA-256')
+        # self.client = pymongo.MongoClient()
+        self.client = pymongo.MongoClient("localhost", username='Admin', password='PasswordForMongo63',
+                                          authSource='admin', authMechanism='SCRAM-SHA-256')
         self.client = pymongo.MongoClient()
         self.db = self.client.Street
         logger.info("Database connection established")
         self.musicians = self.db.musicians
         self.users = self.db.users
+        self.feedback = self.db.feedback
 
     def user_exists(self, user_id: str) -> bool:
         return not (self.users.find_one({"user_id": user_id}) is None)
 
     def musician_exists(self, user_id: str) -> bool:
         return not (self.musicians.find_one({"musician_id": user_id}) is None)
+
+    def feed_exists(self, feed_id: str) -> bool:
+        return not (self.feedback.find_one({"feed_id": feed_id}) is None)
 
     def add_user(self, user_id: str, name=None, language="ru"):
         if not self.user_exists(user_id):
@@ -72,6 +76,26 @@ class Database:
             # 'group_genre': жанры
             # 'group_description': 'Мом',
             # 'group_leader': '@DeadGleb'
+
+    def add_feedback_text(self, feed_id: str, comment: str = None):
+        if self.feed_exists(feed_id):
+            self.feedback.update_one({"feed_id": feed_id}, {"$set": {"text": comment}})
+        else:
+            feedback = {"feed_id": feed_id, "text": comment}
+            self.feedback.insert_one(feedback)
+
+    def add_feedback_rate(self, feed_id: str, rate: int = None):
+        if self.feed_exists(feed_id):
+            self.feedback.update_one({"feed_id": feed_id}, {"$set": {"stars": rate}})
+        else:
+            feedback = {"feed_id": feed_id, "stars": rate}
+            self.feedback.insert_one(feedback)
+
+    def show_feedback(self, feed_id):
+        return self.feedback.find_one({"feed_id": feed_id}, projection={"_id": False})
+
+    def show_feedbacks(self):
+        return list(self.feedback.find(projection={"_id": False, "subscription": False}))
 
     def set_m_name(self, user_id: str, musician_name: str):
         self.musicians.update_one({"musician_id": user_id}, {"$set": {"musician_name": musician_name}})
@@ -100,7 +124,7 @@ class Database:
         return self.musicians.find_one({"musician_id": user_id}, projection={"_id": False})
 
     def get_musicians(self):
-        buffer = list(self.musicians.find(projection={"_id": False, "subscription": False}))
+        buffer = list(self.musicians.find(projection={"_id": False, "subscription": False, "free_subscription": False}))
         if cache.jget("musicians") != buffer:
             cache.jset("musicians", buffer)
 
@@ -144,20 +168,43 @@ class Database:
             if i not in c_genres:
                 self.musicians.update_one({"musician_id": user_id}, {"$push": {"group_genre": i}})
 
-    def free_subscription(self, user_id: str):
-        pass
+    def free_subscription(self, musician_id: str):
+        self.musicians.update_one({"musician_id": musician_id},
+                                  {"$set": {"free_subscription": datetime.datetime.now(), "active_subscription": True}})
 
-    def get_subscription(self, user_id: str):
-        sub = self.musicians.find_one({"musician_id": user_id})['subscription']
+    # def end_free_subscription(self, musician_id: str):
+    #     if self.get_subscription(musician_id):
+    #         self.musicians.update_one({"musician_id": musician_id},
+    #                                   {"$set": {"free_subscription": None, "active_subscription": True}})
+    #     else:
+    #         self.musicians.update_one({"musician_id": musician_id},
+    #                                   {"$set": {"free_subscription": None, "active_subscription": False}})
+
+    def end_subscription(self, musician_id: str):
+        remain = self.get_subscription(musician_id)
+        if remain.days == 30 or remain.days == 90 :
+            self.musicians.update_one({"musician_id": musician_id},
+                                      {"$set": {"subscription": None, "active_subscription": False}})
+
+    def get_subscription(self, musician_id: str):
+        sub = self.musicians.find_one({"musician_id": musician_id})['subscription']
         if sub is None:
             return None
         else:
             return datetime.datetime.now() - sub
 
-    def cancel_subscription(self, user_id: str):
-        if self.get_subscription(user_id) is not None:
-            self.musicians.update_one({"musician_id": user_id},
-                                      {"$set": {"subscription": None, "active_subscription": False}})
+    def get_free_subscription(self, musician_id: str):
+        sub = self.musicians.find_one({"musician_id": musician_id})["free_subscription"]
+        if sub is None:
+            return None
+        else:
+            return datetime.datetime.now() - sub
+
+    def cancel_subscription(self, musician_id: str):
+        if (self.get_subscription(musician_id) or self.get_free_subscription(musician_id)) is not None:
+            self.musicians.update_one({"musician_id": musician_id},
+                                      {"$set": {"subscription": None, "free_subscription": None,
+                                                "active_subscription": False}})
 
     def activate_subscription(self, musician_id: str):
         self.musicians.update_one({"musician_id": musician_id},

@@ -29,5 +29,14 @@ class EditingProfile(StatesGroup):
     EditingGenres = State()
 
 
+class Donating(StatesGroup):
+    UserDonating = State()
+
+
+class Subscribing(StatesGroup):
+    MusicianSubscribing = State()
+    MusicianPaid = State()
+
+
 class Feedback(StatesGroup):
     Reviewing = State()

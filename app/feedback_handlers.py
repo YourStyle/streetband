@@ -5,6 +5,7 @@ from aiogram.types import CallbackQuery
 from app import service as s
 from app.callback_datas import review_callback
 from app.states import Feedback
+from database import database as db
 
 
 async def feedback(message: types.Message, state: FSMContext):
@@ -15,12 +16,14 @@ async def feedback(message: types.Message, state: FSMContext):
 
 
 async def review(message: types.Message):
+    db.add_feedback_text(str(message.from_user.id), comment=message.text)
     await message.answer("Спасибо за отзыв. Оцените бота пожалуйста, нажав на звёздочки с цифирками от 1 до 5",
                          reply_markup=s.review_kb())
 
 
 async def thanks(call: CallbackQuery, callback_data: dict, state: FSMContext):
     await call.answer()
+    db.add_feedback_rate(str(call.from_user.id), rate=callback_data['score'])
     await call.message.answer("Мы получили ваш отзыв! Спасибо 👍")
     print(callback_data)
     await state.reset_state(with_data=True)

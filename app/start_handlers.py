@@ -39,7 +39,7 @@ async def start_normal(message: types.Message, state: FSMContext):
     user_id = str(message.from_user.id)
     if db.user_exists(user_id) and (not db.get_user(user_id)["musician"]):
         await message.answer(msg.wellcome, reply_markup=s.MAIN_KB)
-    elif db.user_exists(user_id) and (db.get_user(user_id)["musician"]):
+    elif db.user_exists(user_id) and (db.musician_exists(user_id)):
         await message.answer(msg.wellcome, reply_markup=s.MUSICIAN_LC_KB)
     else:
         await message.answer(msg.choice, reply_markup=s.CHOICE_KB)
