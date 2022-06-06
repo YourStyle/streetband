@@ -33,8 +33,8 @@ class Database:
 
     def __init__(self, name):
         self.name = name
-        self.client = pymongo.MongoClient("localhost", username='Admin', password='PasswordForMongo63',
-                                          authSource='admin', authMechanism='SCRAM-SHA-256')
+        self.client = pymongo.MongoClient("localhost", username=dotenv.Admin, password=dotenv.Password,
+                                          authSource=dotenv.authSource, authMechanism=dotenv.authMechanism)
         self.db = self.client.Street
         logger.info("Database connection established")
         self.musicians = self.db.musicians
